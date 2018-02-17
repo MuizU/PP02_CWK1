@@ -50,18 +50,18 @@ public class BankAccount_1_2 {
 
 class BankAccountTester {
     private static int accNumValidation(Scanner scn, String output) {
-        int sum;
+        int accNum;
         do {
             System.out.println(output);
             while (!scn.hasNextInt()) {
                 System.out.println("Invalid input! Try again.");
                 scn.next();
             }
-            sum = scn.nextInt();
+            accNum = scn.nextInt();
 
-        } while (sum < 0 || sum > 9999 || sum < 1000);
+        } while (accNum > 9999 || accNum < 1000);
 
-        return sum;
+        return accNum;
     }
 
     private static double moneyValidation(Scanner scanner, String message) {
@@ -94,50 +94,48 @@ class BankAccountTester {
             System.out.println("_______________________________");
 
             int userAccNum = accNumValidation(scn, "Enter your account number: ");
+
+
             for (BankAccount_1_2 bankAccount : userData) {
+
                 if (bankAccount.getAccountNum() == userAccNum) {
                     double openingDeposit = moneyValidation(scn, "Enter your opening deposit: ");
                     bankAccount.setAccountBalance(openingDeposit);
-                }
-                System.out.println("Account number: " + userData.get(0).getAccountNum() + " Opening balance " + userData.get(0).getAccountBalance());
-                System.out.println("Account number: " + userData.get(1).getAccountNum() + "Opening balance" + userData.get(1).getAccountBalance());
-                double transferToAccNum = accNumValidation(scn, "Enter the account number you want to transfer money to:");
+                    for (BankAccount_1_2 bankAccount_1_22 : userData) {
 
-                if (userData.contains(transferToAccNum) && transferToAccNum != userAccNum) {
-                    double transferAmount = moneyValidation(scn, "Enter the amount of money to transfer: $");
-                    if (transferAmount < userData.get(0).getAccountBalance()) {
-                        if (userData.get(0).getAccountBalance() - transferAmount >= 10) {
-                            if ((transferAmount + userData.get(1).getAccountBalance()) <= 100000) {
-                                userData.set(userData.indexOf(userAccNum), bankAccount_1_2).setAccountBalance(bankAccount_1_2.getAccountBalance() - transferToAccNum);
-                                userData.set(userData.indexOf(transferToAccNum), bankAccount_1_2).setAccountBalance(bankAccount_1_2.getAccountBalance() + transferToAccNum);
-                                System.out.println("Account number: " + userData.get(0).getAccountNum() + " Opening balance " + userData.get(0).getAccountBalance());
-                                System.out.println("Account number: " + userData.get(1).getAccountNum() + "Opening balance" + userData.get(1).getAccountBalance());
-                            } else {
-                                System.out.println("Warning the account balance of the receiver is above the federal highest " +
-                                        "federally insured amount");
-                            }
-                        } else {
-                            System.out.println("Warning account balance is below $10");
-                        }
-                    } else {
-                        System.out.println("Error! Transfer value exceeds account balance");
-                        exit = 'x';
+                        System.out.println("Account number: " + bankAccount_1_22.getAccountNum() + " Opening balance " + bankAccount_1_22.getAccountBalance());
                     }
-                } else {
-                    System.out.println("Error! Incorrect account number");
-                    exit = 'x';
+                    double transferToAccNum = accNumValidation(scn, "Enter the account number you want to transfer money to:");
+                    for (BankAccount_1_2 bnkAccount : userData) {
+                        if (transferToAccNum == bnkAccount.getAccountNum()) {
+                            double transferAmount = moneyValidation(scn, "Enter the amount of money to transfer: $");
+                            for (BankAccount_1_2 bankAccount_ : userData) {
+                                if (transferAmount < bankAccount_.getAccountBalance()) {
+                                    System.out.println("Transfer success!");
+                                    for (BankAccount_1_2 bankAccount_1_22 : userData) {
+                                        if (bankAccount_1_22.getAccountNum() == userAccNum) {
+                                            bankAccount_1_22.setAccountBalance(bankAccount_1_22.getAccountBalance() - transferAmount);
+                                            for (BankAccount_1_2 bankAccount_1_ : userData) {
+                                                if (bankAccount_1_.getAccountNum() == transferToAccNum) {
+                                                    bankAccount_1_.setAccountBalance(bankAccount_1_.getAccountBalance() + transferAmount);
+
+                                                }
+                                            }
+                                        }
+
+                                    }
+                                }
+
+                            }
+                        }
+                    }
                 }
             }
             System.out.println("Type 'x' to exit! \nTo continue type any other number");
             exit = scn.next().charAt(0);
             scn.nextLine();
+
+
         } while (exit != 'x');
-
-
-    }
-
-    @Override
-    public String toString() {
-        return "BankAccountTester{}";
     }
 }

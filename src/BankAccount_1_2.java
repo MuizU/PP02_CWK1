@@ -87,6 +87,7 @@ class BankAccountTester {
         userData.add(bankAccount_1_2);
         userData.add(bankAccount_1_21);
 
+
         char exit;
         doLoop:
         do {
@@ -107,12 +108,14 @@ class BankAccountTester {
                     }
                     double transferToAccNum = accNumValidation(scn, "Enter the account number you want to transfer money to:");
                     for (BankAccount_1_2 bnkAccount : userData) {
-                        if (transferToAccNum != userAccNum && transferToAccNum == bnkAccount.getAccountNum()) {//validating the transfer account number is not the users number and is valid
+                        if (transferToAccNum != userAccNum && transferToAccNum == bnkAccount.getAccountNum()) {
+                            //validating the transfer account number is not the users number and is valid
                             double transferAmount = moneyValidation(scn, "Enter the amount of money to transfer: $");
                             for (BankAccount_1_2 bankAccount_ : userData) {
 
 
-                                if (bankAccount_.getAccountNum() == userAccNum && (bankAccount_.getAccountBalance() - transferAmount) < 0) //Checking if the account balance falls below 10
+                                if (bankAccount_.getAccountNum() == userAccNum && (bankAccount_.getAccountBalance() - transferAmount) < 0)
+                                //Checking if the account balance falls below 10
                                 {
                                     System.out.println("Error! Account balance is less than $0.00");
                                     break doLoop;

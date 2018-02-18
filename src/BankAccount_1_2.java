@@ -91,7 +91,7 @@ class BankAccountTester {
         char exit;
         doLoop:
         do {
-            System.out.println("_______________________________");
+            System.out.println("_______________________________\n");
             System.out.println("Welcome to the InterBanking Pty");
             System.out.println("_______________________________");
 
@@ -102,7 +102,6 @@ class BankAccountTester {
                     double openingDeposit = moneyValidation(scn, "Enter your opening deposit: ");
 
                     bankAccount.setAccountBalance((bankAccount.getAccountBalance() + openingDeposit));
-
                     for (BankAccount_1_2 bankAccount_1_22 : userData) {
 
                         System.out.println("Account number: " + bankAccount_1_22.getAccountNum() + " Opening balance " + bankAccount_1_22.getAccountBalance() + "\n");
@@ -116,7 +115,6 @@ class BankAccountTester {
 
                                 if (bankAccount_.getAccountNum() == userAccNum && (bankAccount_.getAccountBalance() - transferAmount) < 0) //Checking if the account balance falls below 10
                                 {
-                                    System.out.println(bankAccount_.getAccountBalance());
                                     System.out.println("Error! Account balance is less than $0.00");
                                     break doLoop;
                                 } else if (bankAccount_.getAccountNum() == userAccNum && ((bankAccount_.getAccountBalance() - transferAmount) >= 0)) {
@@ -127,11 +125,11 @@ class BankAccountTester {
                                         if (bankAccount.getAccountNum() == userAccNum && bankAccount_.getAccountBalance() < 10) {
                                                 System.out.println("Warning! Balance has fallen below $10");
                                             }
-                                        System.out.println("Account number: " + bankAccount.getAccountNum() + " Account Balance: $" + bankAccount_.getAccountBalance());
+                                        System.out.println("Account number: " + bankAccount.getAccountNum() + " Account Balance: " + bankAccount_.getAccountBalance());
                                             for (BankAccount_1_2 bankAccount_1_ : userData) {
                                                 if (bankAccount_1_.getAccountNum() == transferToAccNum) {
                                                     bankAccount_1_.setAccountBalance(bankAccount_1_.getAccountBalance() + transferAmount);
-                                                    System.out.println("Account number: " + bankAccount_1_.getAccountNum() + " Account Balance: $" + bankAccount_1_.getAccountBalance());
+                                                    System.out.println("Account number: " + bankAccount_1_.getAccountNum() + " Account Balance: " + bankAccount_1_.getAccountBalance());
 
                                                 }
                                             }

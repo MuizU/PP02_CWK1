@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Scanner;
 
 public class BankAccount_1_2 {
@@ -82,11 +83,9 @@ class BankAccountTester {
     public static void main(String[] args) {
         Scanner scn = new Scanner(System.in);
         ArrayList<BankAccount_1_2> userData = new ArrayList<>();
-        BankAccount_1_2 bankAccount_1_2 = new BankAccount_1_2(1234, 0, "Muiz Uvais", "Hello".toCharArray());
-        BankAccount_1_2 bankAccount_1_21 = new BankAccount_1_2(1111, 0, "Muiz Uvais", "Hello".toCharArray());
-        userData.add(bankAccount_1_2);
-        userData.add(bankAccount_1_21);
-
+        String authUserName = "Muiz";
+        char[] authPassword = "Hello".toCharArray();
+        int customerCount = 0;
 
         char exit;
         doLoop:
@@ -94,6 +93,36 @@ class BankAccountTester {
             System.out.println("_______________________________\n");
             System.out.println("Welcome to the InterBanking Pty");
             System.out.println("_______________________________");
+            while (customerCount <= 2) {
+                System.out.println("Enter your Authorized Username: ");
+                String authNameEntry = scn.nextLine();
+                System.out.println("Enter your Authorized Password: ");
+                char[] authPasswordEntry = scn.nextLine().toCharArray();
+                if (authNameEntry.equals(authUserName) && Arrays.equals(authPassword, authPasswordEntry)) {
+                    customerCount++;
+                    System.out.println("Enter customer Name: ");
+                    String customerName = scn.nextLine();
+                    System.out.println("Enter customer's Password: ");
+                    char[] customerPassword = scn.nextLine().toCharArray();
+                    int customerAccNum = accNumValidation(scn, "Enter customer's account number: ");
+                    double initialDeposit = moneyValidation(scn, "Enter initial deposit: ");
+                    if (customerCount == 1) {
+                        userData.add(new BankAccount_1_2(customerAccNum, initialDeposit, customerName, customerPassword));
+                        System.out.println("Account creation success!");
+                    } else {
+                        if (userData.get(0).getAccountNum() != customerAccNum) {
+                            userData.add(new BankAccount_1_2(customerAccNum, initialDeposit, customerName, customerPassword));
+                            System.out.println("Account creation success!");
+                        } else {
+                            System.out.println("Account number already taken\nPlease try again");
+                        }
+
+                    }
+                } else {
+                    System.out.println("Invalid Login credentials! Please try again");
+                }
+                scn.nextLine();
+            }
 
             int userAccNum = accNumValidation(scn, "Enter your account number: ");
             loginLoop:

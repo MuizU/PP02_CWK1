@@ -110,55 +110,59 @@ class BankAccountTester {
                     double transferToAccNum = accNumValidation(scn, "Enter the account number you want to transfer money to:");
                     for (BankAccount_1_2 bnkAccount : userData) {
                         if (transferToAccNum != userAccNum && transferToAccNum == bnkAccount.getAccountNum()) {//validating the transfer account number is not the users number and is valid
+                            int count1 = 0;
+                            double transferAmount = moneyValidation(scn, "Enter the amount of money to transfer: $");
+                            for (BankAccount_1_2 bankAccount_ : userData) {
 
-                                double transferAmount = moneyValidation(scn, "Enter the amount of money to transfer: $");
-                                for (BankAccount_1_2 bankAccount_ : userData) {
-                                    if (bankAccount_.getAccountNum() == userAccNum && bankAccount_.getAccountBalance() - transferAmount < 0) {//Checking if the account balance falls below 10
-                                        System.out.println("Error! Account balance is less than $0.00");
-                                        break doLoop;
-                                    } else {
-                                        for (BankAccount_1_2 account_1_2 : userData) {
-                                            if (account_1_2.getAccountNum() == userAccNum && ((account_1_2.getAccountBalance() - transferAmount) >= 0)) {
-                                                System.out.println("Transfer success!");
-                                                for (BankAccount_1_2 bankAccount_1_22 : userData) {
-                                                    if (bankAccount_1_22.getAccountNum() == userAccNum) {
-                                                        bankAccount_1_22.setAccountBalance(bankAccount_1_22.getAccountBalance() - transferAmount);
-                                                        if (bankAccount.getAccountNum() == userAccNum && bankAccount_1_22.getAccountBalance() < 10) {
-                                                            System.out.println("Warning! Balance has fallen below $10");
-                                                            continue;
-                                                        }
-                                                        System.out.println("Account number: " + bankAccount_1_22.getAccountNum() + " Account Balance: " + bankAccount_1_22.getAccountBalance());
-                                                        for (BankAccount_1_2 bankAccount_1_ : userData) {
-                                                            if (bankAccount_1_.getAccountNum() == transferToAccNum) {
+                                if (bankAccount_.getAccountNum() == userAccNum) {
+                                    count1++;
+                                    System.out.println(bankAccount_.getAccountBalance());
+                                    System.out.println(count1);
+                                    System.out.println((bankAccount_.getAccountBalance() - transferAmount));
+                                }
+                                //System.out.println((bankAccount_.getAccountBalance() - transferAmount) < 0);
+                                //if (bankAccount_.getAccountNum() == userAccNum && (bankAccount_.getAccountBalance() - transferAmount) < 0) {//Checking if the account balance falls below 10
+                                //    System.out.println(bankAccount_.getAccountBalance());
+                                //    System.out.println("Error! Account balance is less than $0.00");
+                                //    break doLoop;
+                                else if (bankAccount_.getAccountNum() == userAccNum && ((bankAccount_.getAccountBalance() - transferAmount) >= 0)) {
+                                    System.out.println("Transfer success!");
+                                    for (BankAccount_1_2 bankAccount_1_22 : userData) {
+                                        if (bankAccount_1_22.getAccountNum() == userAccNum) {
+                                            bankAccount_1_22.setAccountBalance(bankAccount_1_22.getAccountBalance() - transferAmount);
+                                            if (bankAccount.getAccountNum() == userAccNum && bankAccount_1_22.getAccountBalance() < 10) {
+                                                System.out.println("Warning! Balance has fallen below $10");
+                                                continue;
+                                            }
+                                            System.out.println("Account number: " + bankAccount_1_22.getAccountNum() + " Account Balance: " + bankAccount_1_22.getAccountBalance());
+                                            for (BankAccount_1_2 bankAccount_1_ : userData) {
+                                                if (bankAccount_1_.getAccountNum() == transferToAccNum) {
 
-                                                                bankAccount_1_.setAccountBalance(bankAccount_1_.getAccountBalance() + transferAmount);
-                                                                System.out.println("Account number: " + bankAccount_1_.getAccountNum() + " Account Balance: " + bankAccount_1_.getAccountBalance());
-
-                                                            }
-                                                        }
-                                                    }
+                                                    bankAccount_1_.setAccountBalance(bankAccount_1_.getAccountBalance() + transferAmount);
+                                                    System.out.println("Account number: " + bankAccount_1_.getAccountNum() + " Account Balance: " + bankAccount_1_.getAccountBalance());
 
                                                 }
-
                                             }
                                         }
+
                                     }
 
                                 }
-
-
-                        }
-                        int counter = 0;
-                        for (BankAccount_1_2 bankAccount12 : userData) {
-                            if (transferToAccNum == userAccNum && transferToAccNum != bankAccount12.getAccountNum()) {
+                            }
+                        } else {
+                            int counter = 0;
+                            if (transferToAccNum == userAccNum && transferToAccNum != bnkAccount.getAccountNum()) {
                                 counter++;
                                 if (counter == userData.size()) {
-                                    System.out.println(bankAccount12.getAccountNum());
-                                System.out.println("Invalid Bank Account transfer Number!");
-                                break loginLoop;
+                                    System.out.println(bnkAccount.getAccountNum());
+                                    System.out.println("Invalid Bank Account transfer Number!");
+                                    break loginLoop;
+                                }
                             }
+
                         }
-                        }
+
+
                     }
                 }
                 int accNumCount = 0;

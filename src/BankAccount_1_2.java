@@ -86,7 +86,6 @@ class BankAccountTester {
         ArrayList<BankAccount_1_2> userData = new ArrayList<>();//Declaring the ArrayList
         String authUserName = "Muiz";//Authorized Username
         char[] authPassword = "Hello".toCharArray(); //Authorized password
-        int customerCount = 0;//Counter for the accounts created by an admin
 
         char exit;//Declaration of the char Variable
         doLoop:
@@ -96,7 +95,7 @@ class BankAccountTester {
             System.out.println("Welcome to the InterBanking Pty");
             System.out.println("_______________________________");
             whileLoop:
-            while (customerCount <= 2) {//while 2 accounts have been created by a user this will run
+            while (userData.size() < 2) {//while 2 accounts have been created by a user this will run
                 System.out.println("Enter your Authorized Username: ");//Authorized User's username
                 String authNameEntry = scn.nextLine();//The variable where the user can enter their username
                 System.out.println("Enter your Authorized Password: ");
@@ -111,13 +110,11 @@ class BankAccountTester {
                     double initialDeposit = moneyValidation(scn, "Enter initial deposit: $");
                     if (userData.size() == 0) {
                         userData.add(new BankAccount_1_2(customerAccNum, initialDeposit, customerName, customerPassword));
-                        customerCount++;
                         System.out.println("Account creation success!");
 
                     } else {
                         if (userData.get(0).getAccountNum() != customerAccNum) {
                             userData.add(new BankAccount_1_2(customerAccNum, initialDeposit, customerName, customerPassword));
-                            customerCount++;
                             System.out.println("Account creation success!");
                             break;
                         } else {
@@ -172,12 +169,13 @@ class BankAccountTester {
                                                 System.out.println("Warning! Balance has fallen below $10");
                                             }
                                         System.out.println("Account number: " + bankAccount.getAccountNum() + ", Account Balance: $" +
-                                                bankAccount_.getAccountBalance());
+                                                bankAccount_.getAccountBalance() + "\nTransferred Amount: $" + transferAmount);
                                         for (BankAccount_1_2 bankAccount_1_ : userData) {
                                             if (bankAccount_1_.getAccountNum() == transferToAccNum) {
                                                     bankAccount_1_.setAccountBalance(bankAccount_1_.getAccountBalance() + transferAmount);
+                                                System.out.println("Warning Balance is above $100,000 which is above federally insured amount");
                                                     System.out.println("Account number: " +
-                                                            bankAccount_1_.getAccountNum() + " Account Balance: $" +
+                                                            bankAccount_1_.getAccountNum() + ", Account Balance: $" +
                                                             bankAccount_1_.getAccountBalance());
 
                                                 }
@@ -202,13 +200,15 @@ class BankAccountTester {
 
 
                     }
-                }
+                } else {
                 int accNumCount = 0;
                 for (BankAccount_1_2 bankAccount12 : userData) {
                     if (bankAccount12.getAccountNum() != userAccNum) {
                         accNumCount++;
                         if (accNumCount == userData.size()) {
-                        System.out.println("Invalid Bank Account Number!");
+                            System.out.println("Invalid Bank Account Number!");
+
+                        }
                         }
                     }
                 }

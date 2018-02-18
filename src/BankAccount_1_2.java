@@ -81,25 +81,27 @@ class BankAccountTester {
     }
 
     public static void main(String[] args) {
-        Scanner scn = new Scanner(System.in);
-        ArrayList<BankAccount_1_2> userData = new ArrayList<>();
-        String authUserName = "Muiz";
-        char[] authPassword = "Hello".toCharArray();
-        int customerCount = 0;
+        Scanner scn = new Scanner(System.in);//Creates the Scanner object
+        ArrayList<BankAccount_1_2> userData = new ArrayList<>();//Declaring the ArrayList
+        String authUserName = "Muiz";//Authorized Username
+        char[] authPassword = "Hello".toCharArray(); //Authorized password
+        int customerCount = 0;//Counter for the accounts created by an admin
 
-        char exit;
+        char exit;//Declaration of the char Variable
         doLoop:
-        do {
+//Label for the do While Loop
+        do {//Start of the do loop
             System.out.println("_______________________________\n");
             System.out.println("Welcome to the InterBanking Pty");
             System.out.println("_______________________________");
-            while (customerCount <= 2) {
-                System.out.println("Enter your Authorized Username: ");
-                String authNameEntry = scn.nextLine();
+            while (customerCount <= 2) {//while 2 accounts have been created by a user this will run
+                System.out.println("Enter your Authorized Username: ");//Authorized User's username
+                String authNameEntry = scn.nextLine();//The variable where the user can enter their username
                 System.out.println("Enter your Authorized Password: ");
-                char[] authPasswordEntry = scn.nextLine().toCharArray();
-                if (authNameEntry.equals(authUserName) && Arrays.equals(authPassword, authPasswordEntry)) {
-                    customerCount++;
+                char[] authPasswordEntry = scn.nextLine().toCharArray();//The variable where the user can enter their password
+                if (authNameEntry.equals(authUserName) && Arrays.equals(authPassword, authPasswordEntry)) //To check if the admin has logged in successfully
+                {
+
                     System.out.println("Enter customer Name: ");
                     String customerName = scn.nextLine();
                     System.out.println("Enter customer's Password: ");
@@ -108,10 +110,13 @@ class BankAccountTester {
                     double initialDeposit = moneyValidation(scn, "Enter initial deposit: ");
                     if (customerCount == 1) {
                         userData.add(new BankAccount_1_2(customerAccNum, initialDeposit, customerName, customerPassword));
+                        customerCount++;
                         System.out.println("Account creation success!");
+
                     } else {
                         if (userData.get(0).getAccountNum() != customerAccNum) {
                             userData.add(new BankAccount_1_2(customerAccNum, initialDeposit, customerName, customerPassword));
+                            customerCount++;
                             System.out.println("Account creation success!");
                         } else {
                             System.out.println("Account number already taken\nPlease try again");

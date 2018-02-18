@@ -64,7 +64,6 @@ class BankAccountTester {
         return accNum;
     }
 
-    static int count = 0;
 
     private static double moneyValidation(Scanner scanner, String message) {
         double sum;
@@ -104,7 +103,7 @@ class BankAccountTester {
                     bankAccount.setAccountBalance((bankAccount.getAccountBalance() + openingDeposit));
                     for (BankAccount_1_2 bankAccount_1_22 : userData) {
 
-                        System.out.println("Account number: " + bankAccount_1_22.getAccountNum() + " Opening balance " + bankAccount_1_22.getAccountBalance() + "\n");
+                        System.out.println("Account number: " + bankAccount_1_22.getAccountNum() + ", Opening balance: $" + bankAccount_1_22.getAccountBalance() + "\n");
                     }
                     double transferToAccNum = accNumValidation(scn, "Enter the account number you want to transfer money to:");
                     for (BankAccount_1_2 bnkAccount : userData) {
@@ -125,11 +124,11 @@ class BankAccountTester {
                                         if (bankAccount.getAccountNum() == userAccNum && bankAccount_.getAccountBalance() < 10) {
                                                 System.out.println("Warning! Balance has fallen below $10");
                                             }
-                                        System.out.println("Account number: " + bankAccount.getAccountNum() + " Account Balance: " + bankAccount_.getAccountBalance());
+                                        System.out.println("Account number: " + bankAccount.getAccountNum() + ", Account Balance: $" + bankAccount_.getAccountBalance());
                                             for (BankAccount_1_2 bankAccount_1_ : userData) {
                                                 if (bankAccount_1_.getAccountNum() == transferToAccNum) {
                                                     bankAccount_1_.setAccountBalance(bankAccount_1_.getAccountBalance() + transferAmount);
-                                                    System.out.println("Account number: " + bankAccount_1_.getAccountNum() + " Account Balance: " + bankAccount_1_.getAccountBalance());
+                                                    System.out.println("Account number: " + bankAccount_1_.getAccountNum() + " Account Balance: $" + bankAccount_1_.getAccountBalance());
 
                                                 }
                                             }

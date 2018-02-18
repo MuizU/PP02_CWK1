@@ -166,8 +166,8 @@ class BankAccountTester {
                                             }
                                         System.out.println("Account number: " + bankAccount.getAccountNum() + ", Account Balance: $" +
                                                 bankAccount_.getAccountBalance());
-                                            for (BankAccount_1_2 bankAccount_1_ : userData) {
-                                                if (bankAccount_1_.getAccountNum() == transferToAccNum) {
+                                        for (BankAccount_1_2 bankAccount_1_ : userData) {
+                                            if (bankAccount_1_.getAccountNum() == transferToAccNum) {
                                                     bankAccount_1_.setAccountBalance(bankAccount_1_.getAccountBalance() + transferAmount);
                                                     System.out.println("Account number: " +
                                                             bankAccount_1_.getAccountNum() + " Account Balance: $" +

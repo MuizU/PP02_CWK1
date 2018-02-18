@@ -60,7 +60,8 @@ class BankAccountTester {
             }
             accNum = scn.nextInt();
 
-        } while (accNum > 9999 || accNum < 1000);
+        }
+        while (accNum > 9999 || accNum < 1000);
 
         return accNum;
     }
@@ -89,11 +90,12 @@ class BankAccountTester {
 
         char exit;//Declaration of the char Variable
         doLoop:
-//Label for the do While Loop
+        //Label for the do While Loop
         do {//Start of the do loop
             System.out.println("_______________________________\n");
             System.out.println("Welcome to the InterBanking Pty");
             System.out.println("_______________________________");
+            whileLoop:
             while (customerCount <= 2) {//while 2 accounts have been created by a user this will run
                 System.out.println("Enter your Authorized Username: ");//Authorized User's username
                 String authNameEntry = scn.nextLine();//The variable where the user can enter their username
@@ -101,14 +103,13 @@ class BankAccountTester {
                 char[] authPasswordEntry = scn.nextLine().toCharArray();//The variable where the user can enter their password
                 if (authNameEntry.equals(authUserName) && Arrays.equals(authPassword, authPasswordEntry)) //To check if the admin has logged in successfully
                 {
-
                     System.out.println("Enter customer Name: ");
                     String customerName = scn.nextLine();
                     System.out.println("Enter customer's Password: ");
                     char[] customerPassword = scn.nextLine().toCharArray();
                     int customerAccNum = accNumValidation(scn, "Enter customer's account number: ");
-                    double initialDeposit = moneyValidation(scn, "Enter initial deposit: ");
-                    if (customerCount == 1) {
+                    double initialDeposit = moneyValidation(scn, "Enter initial deposit: $");
+                    if (userData.size() == 0) {
                         userData.add(new BankAccount_1_2(customerAccNum, initialDeposit, customerName, customerPassword));
                         customerCount++;
                         System.out.println("Account creation success!");
@@ -118,6 +119,7 @@ class BankAccountTester {
                             userData.add(new BankAccount_1_2(customerAccNum, initialDeposit, customerName, customerPassword));
                             customerCount++;
                             System.out.println("Account creation success!");
+                            break;
                         } else {
                             System.out.println("Account number already taken\nPlease try again");
                         }
@@ -126,9 +128,14 @@ class BankAccountTester {
                 } else {
                     System.out.println("Invalid Login credentials! Please try again");
                 }
+                if (userData.size() > 1) {
+                    for (BankAccount_1_2 bankAccount12 : userData) {
+                        System.out.println("Bank Account Number: " + bankAccount12.getAccountNum() + ", Bank Balance: " + bankAccount12.getAccountBalance());
+                    }
+                }
                 scn.nextLine();
             }
-
+            System.out.println("Welcome to the Account Holders portal!");
             int userAccNum = accNumValidation(scn, "Enter your account number: ");
             loginLoop:
             for (BankAccount_1_2 bankAccount : userData) {

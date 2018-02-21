@@ -94,7 +94,6 @@ class BankAccountTester {
             System.out.println("_______________________________\n");
             System.out.println("Welcome to the InterBanking Pty");
             System.out.println("_______________________________");
-            whileLoop:
             while (userData.size() < 2) {//while 2 accounts have been created by a user this will run
                 System.out.println("Enter your Authorized Username: ");//Authorized User's username
                 String authNameEntry = scn.nextLine();//The variable where the user can enter their username

@@ -130,8 +130,8 @@ class Tester {
                     System.out.println("Enter customer's Password: ");
                     char[] customerPassword = scanner.nextLine().toCharArray();
                     int customerAccNum = accNumValidation(scanner, "Enter customer's account number: ");
-                    double initialDeposit = moneyValidation(scanner, "Enter initial deposit: $");
-                    double intRate = interestRateValidation(scanner, "Enter the interest rate: ");
+                    double initialDeposit = 0;
+                    double intRate = 0;
                     if (userData.size() == 0) {
                         userData.add(new BankAccount_3(customerAccNum, initialDeposit, customerName, customerPassword, intRate));
                         System.out.println("Account creation success!");
@@ -153,7 +153,27 @@ class Tester {
                 }
                 if (userData.size() > 1) {
                     for (BankAccount_3 account_3 : userData) {
+                        System.out.println("Successfully created accounts:");
                         System.out.println("Bank Account Number: " + account_3.getAccountNum() + ", Bank Balance: " + account_3.getAccountBalance());
+                    }
+                }
+                while (userData.size() == 2) {
+                    int accNum = accNumValidation(scanner, "Enter your account number: ");
+                    for (BankAccount_3 bankAccount_3 : userData) {
+                        if (bankAccount_3.getAccountBalance() != accNum) {
+                            System.out.println("Invalid Bank account Number");
+                            break;
+                        }
+                        do {
+                            double openingBalance = moneyValidation(scanner, "Enter your opening balance: ");
+                            if (bankAccount_3.getAccountNum() == accNum) {
+                                bankAccount_3.setAccountBalance(openingBalance);
+
+                            }
+
+                        } while (accNum == bankAccount_3.getAccountNum());
+                        System.out.println("Invalid account number!");
+
                     }
                 }
                 scanner.nextLine();

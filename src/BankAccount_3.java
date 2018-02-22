@@ -41,6 +41,10 @@ public class BankAccount_3 {
         return accountBalance;
     }
 
+    public void setInterestRate(double interestRate) {
+        this.interestRate = interestRate;
+    }
+
     public void setAccountBalance(double accountBalance) {
         this.accountBalance = accountBalance;
     }
@@ -160,19 +164,19 @@ class Tester {
                 while (userData.size() == 2) {
                     int accNum = accNumValidation(scanner, "Enter your account number: ");
                     for (BankAccount_3 bankAccount_3 : userData) {
-                        if (bankAccount_3.getAccountBalance() != accNum) {
-                            System.out.println("Invalid Bank account Number");
-                            break;
-                        }
-                        do {
                             double openingBalance = moneyValidation(scanner, "Enter your opening balance: ");
-                            if (bankAccount_3.getAccountNum() == accNum) {
-                                bankAccount_3.setAccountBalance(openingBalance);
+                        if (bankAccount_3.getAccountNum() == accNum) {
+                            bankAccount_3.setAccountBalance(openingBalance);
+                            double interestRate = interestRateValidation(scanner, "Enter your interest rate: ");
+                            bankAccount_3.setInterestRate(interestRate);
+                            double autoDeposit = moneyValidation(scanner, "Enter automatic monthly deposit: ");
+                            while ((autoDeposit + bankAccount_3.getAccountBalance() <= 100000) || ((autoDeposit * 12) + bankAccount_3.getAccountBalance() <= 100000)) {
+                                bankAccount_3.setAccountBalance(bankAccount_3.getAccountBalance() + autoDeposit);
 
                             }
-
-                        } while (accNum == bankAccount_3.getAccountNum());
-                        System.out.println("Invalid account number!");
+                        } else {
+                            System.out.println("Invalid login credentials!");
+                        }
 
                     }
                 }

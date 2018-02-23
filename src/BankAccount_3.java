@@ -116,13 +116,13 @@ class Tester {
 
 
         char exit;//Declaration of the char Variable
-        doLoop:
         //Label for the do While Loop
         do {//Start of the do loop
             System.out.println("_______________________________\n");
             System.out.println("Welcome to the InterBanking Pty");
             System.out.println("_______________________________");
             while (userData.size() < 2) {//while 2 accounts have been created by a user this will run
+                System.out.println("_______________________________\nWelcome to the ADMIN PORTAL\n_______________________________");
                 System.out.println("Enter your Authorized Username: ");//Authorized User's username
                 String authNameEntry = scanner.nextLine();//The variable where the user can enter their username
                 System.out.println("Enter your Authorized Password: ");
@@ -170,10 +170,7 @@ class Tester {
                             double interestRate = interestRateValidation(scanner, "Enter your interest rate: ");
                             bankAccount_3.setInterestRate(interestRate);
                             double autoDeposit = moneyValidation(scanner, "Enter automatic monthly deposit: ");
-                            while ((autoDeposit + bankAccount_3.getAccountBalance() <= 100000) || ((autoDeposit * 12) + bankAccount_3.getAccountBalance() <= 100000)) {
-                                bankAccount_3.setAccountBalance(bankAccount_3.getAccountBalance() + autoDeposit);
-
-                            }
+                            double autoWithdrawal = moneyValidation(scanner, "Enter automatic monthly withdrawal: ");
                         } else {
                             System.out.println("Invalid login credentials!");
                         }

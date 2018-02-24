@@ -182,12 +182,13 @@ class Tester {
     static void calculateBalance(double balance, double rate, double autoDeposit, double autoWithdraw, int months) {
         double balancePerMonth;
         System.out.println("-----------------------------------------------------------------------------");
-        System.out.printf("%10s %10s %10s", "MONTH", "|", "BALANCE");
+        System.out.printf("%10s %10s %10s  %10s %10s", "YEAR", "|", "MONTH", "|", "BALANCE");
         System.out.println("\n-----------------------------------------------------------------------------");
         for (int i = 1; i <= months; i++) {
             balancePerMonth = (balance * (rate / 12)) + autoDeposit - autoWithdraw;
             balance += balancePerMonth;
-                System.out.format("%10d %10s %10f", i, "|", balance);
+            int year = i / 12;
+            System.out.format("%10d %10s %10d %10s %10f", year, "|", i, "|", balance);
                 System.out.println();
         }
         System.out.println("-----------------------------------------------------------------------------");
@@ -270,9 +271,14 @@ class Tester {
                             bankAccount_3.setInterestRate(interestRate);
                             double autoDeposit = depositValidator(scanner, "Enter automatic monthly deposit: ", bankAccount_3.getAccountBalance(), monthsToView);
                             double autoWithdrawal = withdrawalValidator(scanner, "Enter automatic withdrawal: ", bankAccount_3.getAccountBalance(), monthsToView);
-                            calculateBalance(bankAccount_3.getAccountBalance(), interestRate, autoDeposit, autoWithdrawal, monthsToView);
-                            bankAccount_3.setAccountBalance(setBalance(bankAccount_3.getAccountBalance(), interestRate, autoDeposit, autoWithdrawal, monthsToView));
-                            break;
+                            if (setBalance(bankAccount_3.getAccountBalance(), interestRate, autoDeposit, autoWithdrawal, monthsToView) < 0 || setBalance(bankAccount_3.getAccountBalance(), interestRate, autoDeposit, autoWithdrawal, monthsToView) > 100000) {
+                                System.out.println("Account balance is out of valid range please try again");
+                                break;
+                            } else {
+                                calculateBalance(bankAccount_3.getAccountBalance(), interestRate, autoDeposit, autoWithdrawal, monthsToView);
+                                bankAccount_3.setAccountBalance(setBalance(bankAccount_3.getAccountBalance(), interestRate, autoDeposit, autoWithdrawal, monthsToView));
+                                break;
+                            }
 
                         } else {
                             int accNumCount = 0;//Iterator to check the user's who have been iterated

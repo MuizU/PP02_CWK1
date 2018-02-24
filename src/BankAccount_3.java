@@ -53,13 +53,7 @@ public class BankAccount_3 {
         return customerAccName;
     }
 
-    @Override
-    public String toString() {
-        return "BankAccount_3{" +
-                "accountNum=" + accountNum +
-                ", accountBalance=" + accountBalance +
-                '}';
-    }
+    
 }
 
 class Tester {

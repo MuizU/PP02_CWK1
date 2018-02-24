@@ -88,7 +88,7 @@ class Tester {
                 scanner.next();
             }
             rate = scanner.nextDouble();
-        } while (rate < 0.01 && rate >= 15);
+        } while (rate < 0.01 || rate >= 15);
         return rate;
     }
 
@@ -102,9 +102,42 @@ class Tester {
                 scanner.next();
             }
             sum = scanner.nextDouble();
-        } while (sum < 0 && sum > 100000);
+        } while (sum < 0 || sum > 100000);
 
         return sum;
+    }
+
+    static void calculateBalance(double balance, double rate, double autoDeposit, double autoWithdraw, int months) {
+        double balancePerMonth;
+        System.out.println("-----------------------------------------------------------------------------");
+        System.out.printf("%10s %10s %10s", "MONTH", "|", "BALANCE");
+        System.out.println("\n-----------------------------------------------------------------------------");
+        for (int i = 0; i <= months; i++) {
+            balancePerMonth = (balance * (rate / 12)) + autoDeposit - autoWithdraw;
+            balance += balancePerMonth;
+            if (balance >= 0 || balance <= 100000) {
+                System.out.format("%10d %10s %10f", i, "|", balance);
+                System.out.println();
+            } else {
+                System.out.println("Balance has reached cannot change anymore");
+            }
+
+        }
+        System.out.println("-----------------------------------------------------------------------------");
+
+    }
+
+    static int monthValidation(Scanner scanner, String message) {
+        int month;
+        do {
+            System.out.println(message);
+            while (!scanner.hasNextInt()) {
+                System.out.println("Invalid number of months");
+                scanner.next();
+            }
+            month = scanner.nextInt();
+        } while (month < 0 || month > 60);
+        return month;
     }
 
 
@@ -113,8 +146,8 @@ class Tester {
         ArrayList<BankAccount_3> userData = new ArrayList<>();
         String authUserName = "Muiz";//Authorized Username
         char[] authPassword = "Hello".toCharArray(); //Authorized password
-
-
+        userData.add(new BankAccount_3(2222, 0, "1", "1".toCharArray(), 0));
+        userData.add(new BankAccount_3(1111, 0, "1", "123".toCharArray(), 0));
         char exit;//Declaration of the char Variable
         //Label for the do While Loop
         do {//Start of the do loop
@@ -134,19 +167,15 @@ class Tester {
                     System.out.println("Enter customer's Password: ");
                     char[] customerPassword = scanner.nextLine().toCharArray();
                     int customerAccNum = accNumValidation(scanner, "Enter customer's account number: ");
-                    double initialDeposit = 0;
-                    double intRate = 0;
                     if (userData.size() == 0) {
-                        userData.add(new BankAccount_3(customerAccNum, initialDeposit, customerName, customerPassword, intRate));
+
+                        userData.add(new BankAccount_3(customerAccNum, 0, customerName, customerPassword, 0));
                         System.out.println("Account creation success!");
 
                     } else {
-                        if (userData.get(0).getAccountNum() != customerAccNum && userData.get(0).getInterestRate() != userData.get(1).getInterestRate()) {
-                            userData.add(new BankAccount_3(customerAccNum, initialDeposit, customerName, customerPassword, intRate));
+                        if (userData.get(0).getAccountNum() != customerAccNum) {
+                            userData.add(new BankAccount_3(customerAccNum, 0, customerName, customerPassword, 0));
                             System.out.println("Account creation success!");
-                            break;
-                        } else if (userData.get(0).getInterestRate() == userData.get(1).getInterestRate()) {
-                            System.out.println("Interest rates cannot be the same.");
                         } else {
                             System.out.println("Account number already taken\nPlease try again");
                         }
@@ -161,21 +190,35 @@ class Tester {
                         System.out.println("Bank Account Number: " + account_3.getAccountNum() + ", Bank Balance: " + account_3.getAccountBalance());
                     }
                 }
+            }
                 while (userData.size() == 2) {
+                    System.out.println("\nWelcome to the Account Holders portal!");
                     int accNum = accNumValidation(scanner, "Enter your account number: ");
                     for (BankAccount_3 bankAccount_3 : userData) {
-                            double openingBalance = moneyValidation(scanner, "Enter your opening balance: ");
                         if (bankAccount_3.getAccountNum() == accNum) {
+                            double openingBalance = moneyValidation(scanner, "Enter your opening balance: ");
                             bankAccount_3.setAccountBalance(openingBalance);
+                            int monthsToView = monthValidation(scanner, "Enter the number of months to view the forecast");
                             double interestRate = interestRateValidation(scanner, "Enter your interest rate: ");
                             bankAccount_3.setInterestRate(interestRate);
                             double autoDeposit = moneyValidation(scanner, "Enter automatic monthly deposit: ");
-                            double autoWithdrawal = moneyValidation(scanner, "Enter automatic monthly withdrawal: ");
+                            double autoWithdrawal = moneyValidation(scanner, "Enter automatic withdrawal: ");
+                            calculateBalance(bankAccount_3.getAccountBalance(), interestRate, autoDeposit, autoWithdrawal, monthsToView);
                         } else {
-                            System.out.println("Invalid login credentials!");
+                            int accNumCount = 0;//Iterator to check the user's who have been iterated
+                            for (BankAccount_3 bankAccount12 : userData) {
+                                if (bankAccount12.getAccountNum() != accNum) {
+                                    accNumCount++;
+                                    if (accNumCount == userData.size()) {//Iterator to check the
+                                        // user's who have been iterated
+                                        System.out.println("Invalid Bank Account Number!");
+
+                                    }
+                                }
+                            }
                         }
 
-                    }
+
                 }
                 scanner.nextLine();
             }

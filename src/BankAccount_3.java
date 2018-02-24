@@ -107,12 +107,30 @@ class Tester {
         return sum;
     }
 
+    static double depositValidator(Scanner scanner, String message, int accountNumber, ArrayList<BankAccount_3> arrayList) {
+        double amount;
+        for (BankAccount_3 bankAccount_3 : arrayList) {
+            if (bankAccount_3.getAccountNum() == accountNumber) {
+                do {
+                    System.out.println(message);
+                    while (!scanner.hasNextDouble()) {
+                        System.out.println("Invalid Balance has reached maximum");
+                    }
+                    amount = scanner.nextDouble();
+                }
+                while ((bankAccount_3.getAccountBalance() + amount) < 0 || (amount + bankAccount_3.getAccountBalance() > 100000));
+                return amount;
+            }
+        }
+        return 0;
+    }
+
     static void calculateBalance(double balance, double rate, double autoDeposit, double autoWithdraw, int months) {
         double balancePerMonth;
         System.out.println("-----------------------------------------------------------------------------");
         System.out.printf("%10s %10s %10s", "MONTH", "|", "BALANCE");
         System.out.println("\n-----------------------------------------------------------------------------");
-        for (int i = 0; i <= months; i++) {
+        for (int i = 1; i <= months; i++) {
             balancePerMonth = (balance * (rate / 12)) + autoDeposit - autoWithdraw;
             balance += balancePerMonth;
             if (balance >= 0 || balance <= 100000) {
@@ -196,7 +214,7 @@ class Tester {
                     int accNum = accNumValidation(scanner, "Enter your account number: ");
                     for (BankAccount_3 bankAccount_3 : userData) {
                         if (bankAccount_3.getAccountNum() == accNum) {
-                            double openingBalance = moneyValidation(scanner, "Enter your opening balance: ");
+                            double openingBalance = depositValidator(scanner, "Enter your opening balance: ", accNum, userData);
                             bankAccount_3.setAccountBalance(openingBalance);
                             int monthsToView = monthValidation(scanner, "Enter the number of months to view the forecast");
                             double interestRate = interestRateValidation(scanner, "Enter your interest rate: ");
@@ -204,6 +222,8 @@ class Tester {
                             double autoDeposit = moneyValidation(scanner, "Enter automatic monthly deposit: ");
                             double autoWithdrawal = moneyValidation(scanner, "Enter automatic withdrawal: ");
                             calculateBalance(bankAccount_3.getAccountBalance(), interestRate, autoDeposit, autoWithdrawal, monthsToView);
+
+
                         } else {
                             int accNumCount = 0;//Iterator to check the user's who have been iterated
                             for (BankAccount_3 bankAccount12 : userData) {

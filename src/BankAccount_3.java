@@ -129,41 +129,44 @@ class Tester {
     static double depositValidator(Scanner scanner, String message, double balance, int months) {
         double amount;
                 do {
+                    int count = -1;
+                    count++;
+                    if (count > 0) {
+                        System.out.println("Invalid amount!!");
+                    }
                     System.out.println(message);
-                    int count = 0;
-                    while (!scanner.hasNextDouble() && count <= 1) {
-                        System.out.println("Invalid amount");
-                        count++;
+
+                    while (!scanner.hasNextDouble()) {
+                        System.out.println("Invalid entry");
+
                     }
                     amount = scanner.nextDouble();
+                    System.out.println();
+
                 }
                 while (balanceAtEndOfTerm(balance, months, amount) < 0 || balanceAtEndOfTerm(balance, months, amount) > 100000);
                 return amount;
     }
 
-    static double balanceAtEndOfTerm(double balance, double rate, int months) {
+    static double balanceAtEndOfTerm(double balance, double interestRate, int months) {
         double balancePerMonth;
         for (int i = 1; i <= months; i++) {
-            balancePerMonth = (balance * (rate / 12));
+            balancePerMonth = (balance * (interestRate / 12));
             balance += balancePerMonth;
         }
         return balance;
     }
 
     static double balanceAtEndOfTerm(double balance, int months, double deposit) {
-        double balancePerMonth;
         for (int i = 1; i <= months; i++) {
-            balancePerMonth = balance + deposit;
-            balance += balancePerMonth;
+            balance += deposit;
         }
         return balance;
     }
 
     static double balanceAtEndOfTerm(int months, double balance, double withdrawal) {
-        double balancePerMonth;
         for (int i = 1; i <= months; i++) {
-            balancePerMonth = balance - withdrawal;
-            balance += balancePerMonth;
+            balance += withdrawal;
         }
         return balance;
     }
@@ -266,7 +269,7 @@ class Tester {
                             double interestRate = interestRateValidator(scanner, "Enter your interest rate: ", bankAccount_3.getAccountBalance(), monthsToView);
                             bankAccount_3.setInterestRate(interestRate);
                             double autoDeposit = depositValidator(scanner, "Enter automatic monthly deposit: ", bankAccount_3.getAccountBalance(), monthsToView);
-                            double autoWithdrawal = moneyValidation(scanner, "Enter automatic withdrawal: ");
+                            double autoWithdrawal = withdrawalValidator(scanner, "Enter automatic withdrawal: ", bankAccount_3.getAccountBalance(), monthsToView);
                             calculateBalance(bankAccount_3.getAccountBalance(), interestRate, autoDeposit, autoWithdrawal, monthsToView);
                             bankAccount_3.setAccountBalance(setBalance(bankAccount_3.getAccountBalance(), interestRate, autoDeposit, autoWithdrawal, monthsToView));
                             break;

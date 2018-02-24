@@ -1,3 +1,6 @@
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Scanner;
@@ -53,7 +56,15 @@ public class BankAccount_3 {
         return customerAccName;
     }
 
-    
+    @Override
+    public String toString() {
+        return "BankAccount_details[" +
+                "accountNum=" + accountNum +
+                ", accountBalance=$" + accountBalance +
+                ", customerAccName='" + customerAccName + '\'' +
+                ", interestRate=" + interestRate + "%" +
+                ']';
+    }
 }
 
 class Tester {
@@ -89,7 +100,6 @@ class Tester {
     }
 
 
-
     private static double moneyValidation(Scanner scanner, String message) {
         double sum;
         do {
@@ -122,24 +132,24 @@ class Tester {
 
     static double depositValidator(Scanner scanner, String message, double balance, int months) {
         double amount;
-                do {
-                    int count = -1;
-                    count++;
-                    if (count > 0) {
-                        System.out.println("Invalid amount!!");
-                    }
-                    System.out.println(message);
+        do {
+            int count = -1;
+            count++;
+            if (count > 0) {
+                System.out.println("Invalid amount!!");
+            }
+            System.out.println(message);
 
-                    while (!scanner.hasNextDouble()) {
-                        System.out.println("Invalid entry");
+            while (!scanner.hasNextDouble()) {
+                System.out.println("Invalid entry");
 
-                    }
-                    amount = scanner.nextDouble();
-                    System.out.println();
+            }
+            amount = scanner.nextDouble();
+            System.out.println();
 
-                }
-                while (balanceAtEndOfTerm(balance, months, amount) < 0 || balanceAtEndOfTerm(balance, months, amount) > 100000);
-                return amount;
+        }
+        while (balanceAtEndOfTerm(balance, months, amount) < 0 || balanceAtEndOfTerm(balance, months, amount) > 100000);
+        return amount;
     }
 
     static double balanceAtEndOfTerm(double balance, double interestRate, int months) {
@@ -173,17 +183,18 @@ class Tester {
         }
         return balance;
     }
+
     static void calculateBalance(double balance, double rate, double autoDeposit, double autoWithdraw, int months) {
         double balancePerMonth;
         System.out.println("-----------------------------------------------------------------------------");
         System.out.printf("%10s %10s %10s  %10s %10s", "YEAR", "|", "MONTH", "|", "BALANCE");
-        System.out.println("\n-----------------------------------------------------------------------------");
+        System.out.println("\n---------------------------------------------------------------------------");
         for (int i = 1; i <= months; i++) {
             balancePerMonth = (balance * (rate / 12)) + autoDeposit - autoWithdraw;
             balance += balancePerMonth;
             int year = i / 12;
             System.out.format("%10d %10s %10d %10s %10f", year, "|", i, "|", balance);
-                System.out.println();
+            System.out.println();
         }
         System.out.println("-----------------------------------------------------------------------------");
 
@@ -203,7 +214,7 @@ class Tester {
     }
 
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         Scanner scanner = new Scanner(System.in);
         ArrayList<BankAccount_3> userData = new ArrayList<>();
         String authUserName = "Muiz";//Authorized Username
@@ -253,40 +264,45 @@ class Tester {
                     }
                 }
             }
-                while (userData.size() == 2) {
-                    System.out.println("\nWelcome to the Account Holders portal!");
-                    int accNum = accNumValidation(scanner, "Enter your account number: ");
-                    for (BankAccount_3 bankAccount_3 : userData) {
-                        if (bankAccount_3.getAccountNum() == accNum) {
-                            int monthsToView = monthValidation(scanner, "Enter the number of months to view the forecast: ");
-                            double openingBalance = moneyValidation(scanner, "Enter your opening balance: ");
-                            bankAccount_3.setAccountBalance(openingBalance);
-                            double interestRate = interestRateValidator(scanner, "Enter your interest rate: ", bankAccount_3.getAccountBalance(), monthsToView);
-                            bankAccount_3.setInterestRate(interestRate);
-                            double autoDeposit = depositValidator(scanner, "Enter automatic monthly deposit: ", bankAccount_3.getAccountBalance(), monthsToView);
-                            double autoWithdrawal = withdrawalValidator(scanner, "Enter automatic withdrawal: ", bankAccount_3.getAccountBalance(), monthsToView);
-                            if (setBalance(bankAccount_3.getAccountBalance(), interestRate, autoDeposit, autoWithdrawal, monthsToView) < 0 || setBalance(bankAccount_3.getAccountBalance(), interestRate, autoDeposit, autoWithdrawal, monthsToView) > 100000) {
-                                System.out.println("Account balance is out of valid range please try again");
-                                break;
-                            } else {
-                                calculateBalance(bankAccount_3.getAccountBalance(), interestRate, autoDeposit, autoWithdrawal, monthsToView);
-                                bankAccount_3.setAccountBalance(setBalance(bankAccount_3.getAccountBalance(), interestRate, autoDeposit, autoWithdrawal, monthsToView));
-                                break;
-                            }
-
+            while (userData.size() == 2) {
+                System.out.println("\nWelcome to the Account Holders portal!");
+                int accNum = accNumValidation(scanner, "Enter your account number: ");
+                for (BankAccount_3 bankAccount_3 : userData) {
+                    if (bankAccount_3.getAccountNum() == accNum) {
+                        int monthsToView = monthValidation(scanner, "Enter the number of months to view the forecast: ");
+                        double openingBalance = moneyValidation(scanner, "Enter your opening balance: ");
+                        bankAccount_3.setAccountBalance(openingBalance);
+                        double interestRate = interestRateValidator(scanner, "Enter your interest rate: ", bankAccount_3.getAccountBalance(), monthsToView);
+                        bankAccount_3.setInterestRate(interestRate);
+                        double autoDeposit = depositValidator(scanner, "Enter automatic monthly deposit: ", bankAccount_3.getAccountBalance(), monthsToView);
+                        double autoWithdrawal = withdrawalValidator(scanner, "Enter automatic withdrawal: ", bankAccount_3.getAccountBalance(), monthsToView);
+                        if (setBalance(bankAccount_3.getAccountBalance(), interestRate, autoDeposit, autoWithdrawal, monthsToView) < 0 || setBalance(bankAccount_3.getAccountBalance(), interestRate, autoDeposit, autoWithdrawal, monthsToView) > 100000) {
+                            System.out.println("Account balance is out of valid range please try again");
+                            break;
                         } else {
-                            int accNumCount = 0;//Iterator to check the user's who have been iterated
-                            for (BankAccount_3 bankAccount12 : userData) {
-                                if (bankAccount12.getAccountNum() != accNum) {
-                                    accNumCount++;
-                                    if (accNumCount == userData.size()) {//Iterator to check the
-                                        // user's who have been iterated
-                                        System.out.println("Invalid Bank Account Number!");
+                            calculateBalance(bankAccount_3.getAccountBalance(), interestRate, autoDeposit, autoWithdrawal, monthsToView);
+                            bankAccount_3.setAccountBalance(setBalance(bankAccount_3.getAccountBalance(), interestRate, autoDeposit, autoWithdrawal, monthsToView));
+                            PrintWriter file = new PrintWriter(new FileWriter(bankAccount_3.getCustomerAccName() + "'s user details.txt"));
+                            file.println(bankAccount_3.toString());
+                            file.flush();
+                            file.close();
 
-                                    }
+                            break;
+                        }
+
+                    } else {
+                        int accNumCount = 0;//Iterator to check the user's who have been iterated
+                        for (BankAccount_3 bankAccount12 : userData) {
+                            if (bankAccount12.getAccountNum() != accNum) {
+                                accNumCount++;
+                                if (accNumCount == userData.size()) {//Iterator to check the
+                                    // user's who have been iterated
+                                    System.out.println("Invalid Bank Account Number!");
+
                                 }
                             }
                         }
+                    }
 
 
                 }

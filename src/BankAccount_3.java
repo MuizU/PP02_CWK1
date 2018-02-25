@@ -133,19 +133,20 @@ class Tester {
     static double depositValidator(Scanner scanner, String message, double balance, int months) {
         double amount;
         do {
+
+            System.out.println(message);
+
+            while (!scanner.hasNextDouble()) {
+                System.out.println("Invalid entry");
+            }
+            amount = scanner.nextDouble();
+            System.out.println();
             int count = -1;
             count++;
             if (count > 0) {
                 System.out.println("Invalid amount!!");
             }
-            System.out.println(message);
 
-            while (!scanner.hasNextDouble()) {
-                System.out.println("Invalid entry");
-
-            }
-            amount = scanner.nextDouble();
-            System.out.println();
 
         }
         while (balanceAtEndOfTerm(balance, months, amount) < 0 || balanceAtEndOfTerm(balance, months, amount) > 100000);
@@ -193,7 +194,7 @@ class Tester {
             balancePerMonth = (balance * (rate / 12)) + autoDeposit - autoWithdraw;
             balance += balancePerMonth;
             int year = i / 12;
-            System.out.format("%10d %10s %10d %10s %10f", year, "|", i, "|", balance);
+            System.out.format("%10d %10s %10d %10s %s %10f", year, "|", i, "|", "$", balance);
             System.out.println();
         }
         System.out.println("-----------------------------------------------------------------------------");
@@ -223,6 +224,7 @@ class Tester {
         userData.add(new BankAccount_3(1111, 0, "1", "123".toCharArray(), 0));
         char exit;//Declaration of the char Variable
         //Label for the do While Loop
+        doLoop:
         do {//Start of the do loop
             System.out.println("_______________________________\n");
             System.out.println("Welcome to the InterBanking Pty");
@@ -264,6 +266,7 @@ class Tester {
                     }
                 }
             }
+            whileLoop:
             while (userData.size() == 2) {
                 System.out.println("\nWelcome to the Account Holders portal!");
                 int accNum = accNumValidation(scanner, "Enter your account number: ");
@@ -286,31 +289,79 @@ class Tester {
                             file.println(bankAccount_3.toString());
                             file.flush();
                             file.close();
-
-                            break;
                         }
+                        double transferToAccNum = accNumValidation(scanner, "Enter the account number you want to transfer money to:");
+                        for (BankAccount_3 bnkAccount : userData) {
+                            if (transferToAccNum != accNum && transferToAccNum == bnkAccount.getAccountNum()) {
+                                //validating the transfer account number is not the users number and is valid
+                                double transferAmount = moneyValidation(scanner, "Enter the amount of money to transfer: $");
+                                int count = 0;
+                                for (BankAccount_3 bankAccount_ : userData) {
 
-                    } else {
-                        int accNumCount = 0;//Iterator to check the user's who have been iterated
-                        for (BankAccount_3 bankAccount12 : userData) {
-                            if (bankAccount12.getAccountNum() != accNum) {
-                                accNumCount++;
-                                if (accNumCount == userData.size()) {//Iterator to check the
-                                    // user's who have been iterated
-                                    System.out.println("Invalid Bank Account Number!");
+
+                                    if (bankAccount_.getAccountNum() == accNum && (bankAccount_.getAccountBalance() -
+                                            transferAmount) < 0)
+                                    //Checking if the account balance falls below $10
+                                    {
+                                        System.out.println("Error! Account balance is less than $0.00"); //Error message when account Balance falls below $0.00
+                                        break doLoop; //program ends
+                                    } else { //If transfer amount is greater than account balance
+                                        count++;
+
+                                        if (bankAccount_.getAccountNum() == accNum) {//
+                                            bankAccount_.setAccountBalance(bankAccount_.getAccountBalance() - transferAmount);//removing the transfer amount from the sender
+                                            System.out.println("Transfer success!");
+                                            if (bankAccount_3.getAccountNum() == accNum && bankAccount_.getAccountBalance() < 10) {//if senders account balance falls below $10
+                                                System.out.println("Warning! Balance has fallen below $10");//Warning message
+                                            }
+                                            System.out.println("Account number: " + bankAccount_3.getAccountNum() + ", Account Balance: $" +
+                                                    bankAccount_.getAccountBalance() + "\nTransferred Amount: $" + transferAmount);//Displays transfer amount
+                                            for (BankAccount_3 bankAccount_1_ : userData) {
+                                                if (bankAccount_1_.getAccountNum() == transferToAccNum) {
+                                                    if (bankAccount_1_.getAccountBalance() > 100000) {
+                                                        System.out.println("Warning Balance is above $100,000 which is above federally insured amount");
+                                                    } else {
+                                                        bankAccount_1_.setAccountBalance(bankAccount_1_.getAccountBalance() + transferAmount);/*Adding the transferred money
+                                                    to the receiver's account  */
+
+                                                        System.out.println("Account number: " +//Displays Balance and account number
+                                                                bankAccount_1_.getAccountNum() + ", Account Balance: $" +
+                                                                bankAccount_1_.getAccountBalance());
+                                                        break whileLoop;
+                                                    }
+                                                }
+                                            }
+                                        } else {
+                                            int accNumCount = 0;//Iterator to check the user's who have been iterated
+                                            for (BankAccount_3 bankAccount12 : userData) {
+                                                if (bankAccount12.getAccountNum() != accNum) {
+                                                    accNumCount++;
+                                                    if (accNumCount == userData.size()) {//Iterator to check the
+                                                        // user's who have been iterated
+                                                        System.out.println("Invalid Bank Account Number!");
+                                                        break whileLoop;
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
 
                                 }
                             }
+
+
+                            scanner.nextLine();
                         }
+
                     }
 
-
                 }
-                scanner.nextLine();
             }
             System.out.println("Type 'x' to exit! \nTo continue type any other number");
             exit = scanner.next().charAt(0);
             scanner.nextLine();
         } while (exit != 'x');
+
     }
-}
+    }
+

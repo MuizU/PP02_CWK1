@@ -276,7 +276,7 @@ class Tester {
                 validationLoop:
                 for (BankAccount_3 bankAccount_3 : userData) {
                     if (bankAccount_3.getAccountNum() == accNum) {
-                        while (bankAccount_3.getAccountBalance() == 0 || forecastCounter < 2) {
+                        while (bankAccount_3.getAccountBalance() == 0 && forecastCounter < 2) {
                             int monthsToView = monthValidation(scanner, "Enter the number of months to view the forecast: ");
                             double openingBalance = moneyValidation(scanner, "Enter your opening balance: ");
                             bankAccount_3.setAccountBalance(openingBalance);
@@ -293,9 +293,8 @@ class Tester {
                                 PrintWriter file = new PrintWriter(new FileWriter(bankAccount_3.getCustomerAccName() + "'s user details.txt"));
                                 file.println(bankAccount_3.toString());
                                 BufferedReader br = new BufferedReader(new FileReader(bankAccount_3.getCustomerAccName() + "'s user details.txt"));
-                                String line;
-                                while ((line = br.readLine()) != null) {
-                                    System.out.println(line);
+                                while ((br.readLine()) != null) {
+                                    System.out.println("Details stored");
                                 }
                                 br.close();
                                 forecastCounter++;

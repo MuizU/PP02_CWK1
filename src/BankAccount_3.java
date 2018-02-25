@@ -1,9 +1,8 @@
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Scanner;
+import java.util.StringTokenizer;
 
 public class BankAccount_3 {
 
@@ -221,6 +220,8 @@ class Tester {
         ArrayList<BankAccount_3> userData = new ArrayList<>();
         String authUserName = "Muiz";//Authorized Username
         char[] authPassword = "Hello".toCharArray(); //Authorized password
+        userData.add(new BankAccount_3(1111, 0, "Muiz", "123".toCharArray(), 0));
+        userData.add((new BankAccount_3(1234, 0, "Hanzaka", "123".toCharArray(), 0)));
         char exit;//Declaration of the char Variable
         //Label for the do While Loop
         doLoop:
@@ -273,24 +274,31 @@ class Tester {
                 validationLoop:
                 for (BankAccount_3 bankAccount_3 : userData) {
                     if (bankAccount_3.getAccountNum() == accNum) {
-                        int monthsToView = monthValidation(scanner, "Enter the number of months to view the forecast: ");
-                        double openingBalance = moneyValidation(scanner, "Enter your opening balance: ");
-                        bankAccount_3.setAccountBalance(openingBalance);
-                        double interestRate = interestRateValidator(scanner, "Enter your interest rate: ", bankAccount_3.getAccountBalance(), monthsToView);
-                        bankAccount_3.setInterestRate(interestRate);
-                        double autoDeposit = depositValidator(scanner, "Enter automatic monthly deposit: ", bankAccount_3.getAccountBalance(), monthsToView);
-                        double autoWithdrawal = withdrawalValidator(scanner, "Enter automatic withdrawal: ", bankAccount_3.getAccountBalance(), monthsToView);
-                        if (setBalance(bankAccount_3.getAccountBalance(), interestRate, autoDeposit, autoWithdrawal, monthsToView) < 0 || setBalance(bankAccount_3.getAccountBalance(), interestRate, autoDeposit, autoWithdrawal, monthsToView) > 100000) {
-                            System.out.println("Account balance is out of valid range please try again");
-                            break;
-                        } else {
-                            calculateBalance(bankAccount_3.getAccountBalance(), interestRate, autoDeposit, autoWithdrawal, monthsToView);
-                            bankAccount_3.setAccountBalance(setBalance(bankAccount_3.getAccountBalance(), interestRate, autoDeposit, autoWithdrawal, monthsToView));
-                            PrintWriter file = new PrintWriter(new FileWriter(bankAccount_3.getCustomerAccName() + "'s user details.txt"));
-                            file.println(bankAccount_3.toString());
-                            file.flush();
-                            file.close();
-                        }
+                        if (bankAccount_3.getAccountBalance() == 0) {
+                            int monthsToView = monthValidation(scanner, "Enter the number of months to view the forecast: ");
+                            double openingBalance = moneyValidation(scanner, "Enter your opening balance: ");
+                            bankAccount_3.setAccountBalance(openingBalance);
+                            double interestRate = interestRateValidator(scanner, "Enter your interest rate: ", bankAccount_3.getAccountBalance(), monthsToView);
+                            bankAccount_3.setInterestRate(interestRate);
+                            double autoDeposit = depositValidator(scanner, "Enter automatic monthly deposit: ", bankAccount_3.getAccountBalance(), monthsToView);
+                            double autoWithdrawal = withdrawalValidator(scanner, "Enter automatic withdrawal: ", bankAccount_3.getAccountBalance(), monthsToView);
+                            if (setBalance(bankAccount_3.getAccountBalance(), interestRate, autoDeposit, autoWithdrawal, monthsToView) < 0 || setBalance(bankAccount_3.getAccountBalance(), interestRate, autoDeposit, autoWithdrawal, monthsToView) > 100000) {
+                                System.out.println("Account balance is out of valid range please try again");
+                                break;
+                            } else {
+                                calculateBalance(bankAccount_3.getAccountBalance(), interestRate, autoDeposit, autoWithdrawal, monthsToView);
+                                bankAccount_3.setAccountBalance(setBalance(bankAccount_3.getAccountBalance(), interestRate, autoDeposit, autoWithdrawal, monthsToView));
+                                BufferedReader output = new BufferedReader(new FileReader(bankAccount_3.getCustomerAccName() + "'s user details.txt"));
+                                PrintWriter file = new PrintWriter(new FileWriter(bankAccount_3.getCustomerAccName() + "'s user details.txt"));
+                                file.println(bankAccount_3.toString());
+
+                                String lines = output.readLine();
+                                StringTokenizer token = new StringTokenizer(lines);
+                                int a = Integer.parseInt(token.nextToken());
+                                file.flush();
+                                file.close();
+                            }
+                        } else if (bankAccount_3.getAccountBalance() >= 0) {
                         double transferToAccNum = accNumValidation(scanner, "Enter the account number you want to transfer money to:");
                         for (BankAccount_3 bnkAccount : userData) {
                             TransferLoop:
@@ -332,8 +340,8 @@ class Tester {
                                                         break whileLoop;
                                                     }
                                                 }
-                                            }
-                                        } else {
+                                                }
+                                            } else {
                                             int accNumCount = 0;//Iterator to check the user's who have been iterated
                                             for (BankAccount_3 bankAccount3 : userData) {
                                                 if (bankAccount3.getAccountNum() != accNum) {
@@ -345,11 +353,11 @@ class Tester {
                                                     }
                                                 }
                                             }
+                                            }
                                         }
                                     }
 
-                                }
-                            } else {
+                                } else {
                                 int counter = 0;//Iterator to check the user's who have been iterated
                                 if (transferToAccNum == accNum && transferToAccNum != bnkAccount.getAccountNum()) {/*To check the transferee's
                            account number     */
@@ -360,6 +368,7 @@ class Tester {
                                         break validationLoop;
                                     }
 
+                                }
 
                                     scanner.nextLine();
                                 }

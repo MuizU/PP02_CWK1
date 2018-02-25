@@ -272,11 +272,10 @@ class Tester {
                 System.out.println("\nWelcome to the Account portal!");
                 System.out.println("\n--------------------------------------------------");
                 int accNum = accNumValidation(scanner, "Enter your account number: ");
-                int forecastCounter = 0;
                 validationLoop:
                 for (BankAccount_3 bankAccount_3 : userData) {
                     if (bankAccount_3.getAccountNum() == accNum) {
-                        while (bankAccount_3.getAccountBalance() == 0 && forecastCounter < 2) {
+                        while (bankAccount_3.getAccountBalance() == 0 && bankAccount_3.getInterestRate() == 0) {
                             int monthsToView = monthValidation(scanner, "Enter the number of months to view the forecast: ");
                             double openingBalance = moneyValidation(scanner, "Enter your opening balance: ");
                             bankAccount_3.setAccountBalance(openingBalance);
@@ -297,87 +296,89 @@ class Tester {
                                     System.out.println("Details stored");
                                 }
                                 br.close();
-                                forecastCounter++;
                                 file.flush();
                                 file.close();
                             }
                         }
-                        double transferToAccNum = accNumValidation(scanner, "Enter the account number you want to transfer money to:");
-                        for (BankAccount_3 bnkAccount : userData) {
-                            TransferLoop:
-                            if (transferToAccNum != accNum && transferToAccNum == bnkAccount.getAccountNum()) {
-                                //validating the transfer account number is not the users number and is valid
-                                double transferAmount = moneyValidation(scanner, "Enter the amount of money to transfer: $");
-                                int count = 0;
-                                for (BankAccount_3 bankAccount_ : userData) {
+                        if (bankAccount_3.getAccountBalance() > 0) {
+                            double transferToAccNum = accNumValidation(scanner, "Enter the account number you want to transfer money to:");
+                            for (BankAccount_3 bnkAccount : userData) {
+                                TransferLoop:
+                                if (transferToAccNum != accNum && transferToAccNum == bnkAccount.getAccountNum()) {
+                                    //validating the transfer account number is not the users number and is valid
+                                    double transferAmount = moneyValidation(scanner, "Enter the amount of money to transfer: $");
+                                    int count = 0;
+                                    for (BankAccount_3 bankAccount_ : userData) {
 
 
-                                    if (bankAccount_.getAccountNum() == accNum && (bankAccount_.getAccountBalance() -
-                                            transferAmount) < 0)
-                                    //Checking if the account balance falls below $10
-                                    {
-                                        System.out.println("Error! Account balance is less than $0.00"); //Error message when account Balance falls below $0.00
-                                        break doLoop; //program ends
-                                    } else { //If transfer amount is greater than account balance
-                                        count++;
+                                        if (bankAccount_.getAccountNum() == accNum && (bankAccount_.getAccountBalance() -
+                                                transferAmount) < 0)
+                                        //Checking if the account balance falls below $10
+                                        {
+                                            System.out.println("Error! Account balance is less than $0.00"); //Error message when account Balance falls below $0.00
+                                            break doLoop; //program ends
+                                        } else { //If transfer amount is greater than account balance
+                                            count++;
 
-                                        if (bankAccount_.getAccountNum() == accNum) {//
-                                            bankAccount_.setAccountBalance(bankAccount_.getAccountBalance() - transferAmount);//removing the transfer amount from the sender
-                                            System.out.println("Transfer success!");
-                                            if (bankAccount_3.getAccountNum() == accNum && bankAccount_.getAccountBalance() < 10) {//if senders account balance falls below $10
-                                                System.out.println("Warning! Balance has fallen below $10");//Warning message
-                                            }
-                                            System.out.println("Account number: " + bankAccount_3.getAccountNum() + ", Account Balance: $" +
-                                                    bankAccount_.getAccountBalance() + "\nTransferred Amount: $" + transferAmount);//Displays transfer amount
-                                            for (BankAccount_3 bankAccount_1_ : userData) {
-                                                if (bankAccount_1_.getAccountNum() == transferToAccNum) {
-                                                    if (bankAccount_1_.getAccountBalance() > 100000) {
-                                                        System.out.println("Warning Balance is above $100,000 which is above federally insured amount");
-                                                    } else {
-                                                        bankAccount_1_.setAccountBalance(bankAccount_1_.getAccountBalance() + transferAmount);/*Adding the transferred money
+                                            if (bankAccount_.getAccountNum() == accNum) {//
+                                                bankAccount_.setAccountBalance(bankAccount_.getAccountBalance() - transferAmount);//removing the transfer amount from the sender
+                                                System.out.println("Transfer success!");
+                                                if (bankAccount_3.getAccountNum() == accNum && bankAccount_.getAccountBalance() < 10) {//if senders account balance falls below $10
+                                                    System.out.println("Warning! Balance has fallen below $10");//Warning message
+                                                }
+                                                System.out.println("Account number: " + bankAccount_3.getAccountNum() + ", Account Balance: $" +
+                                                        bankAccount_.getAccountBalance() + "\nTransferred Amount: $" + transferAmount);//Displays transfer amount
+                                                for (BankAccount_3 bankAccount_1_ : userData) {
+                                                    if (bankAccount_1_.getAccountNum() == transferToAccNum) {
+                                                        if (bankAccount_1_.getAccountBalance() > 100000) {
+                                                            System.out.println("Warning Balance is above $100,000 which is above federally insured amount");
+                                                        } else {
+                                                            bankAccount_1_.setAccountBalance(bankAccount_1_.getAccountBalance() + transferAmount);/*Adding the transferred money
                                                     to the receiver's account  */
 
-                                                        System.out.println("Account number: " +//Displays Balance and account number
-                                                                bankAccount_1_.getAccountNum() + ", Account Balance: $" +
-                                                                bankAccount_1_.getAccountBalance());
-                                                        break whileLoop;
+                                                            System.out.println("Account number: " +//Displays Balance and account number
+                                                                    bankAccount_1_.getAccountNum() + ", Account Balance: $" +
+                                                                    bankAccount_1_.getAccountBalance());
+                                                            break whileLoop;
+                                                        }
                                                     }
-                                                }
                                                 }
                                             } else {
-                                            int accNumCount = 0;//Iterator to check the user's who have been iterated
-                                            for (BankAccount_3 bankAccount3 : userData) {
-                                                if (bankAccount3.getAccountNum() != accNum) {
-                                                    accNumCount++;
-                                                    if (accNumCount == userData.size()) {//Iterator to check the
-                                                        // user's who have been iterated
-                                                        System.out.println("Invalid Bank Account Number!");
+                                                int accNumCount = 0;//Iterator to check the user's who have been iterated
+                                                for (BankAccount_3 bankAccount3 : userData) {
+                                                    if (bankAccount3.getAccountNum() != accNum) {
+                                                        accNumCount++;
+                                                        if (accNumCount == userData.size()) {//Iterator to check the
+                                                            // user's who have been iterated
+                                                            System.out.println("Invalid Bank Account Number!");
 
+                                                        }
                                                     }
                                                 }
-                                            }
                                             }
                                         }
                                     }
 
                                 } else {
-                                int counter = 0;//Iterator to check the user's who have been iterated
-                                if (transferToAccNum == accNum && transferToAccNum != bnkAccount.getAccountNum()) {/*To check the transferee's
+                                    int counter = 0;//Iterator to check the user's who have been iterated
+                                    if (transferToAccNum == accNum && transferToAccNum != bnkAccount.getAccountNum()) {/*To check the transferee's
                            account number     */
-                                    counter++;
-                                    if (counter == userData.size()) {//if all users have been checked
-                                        System.out.println(bnkAccount.getAccountNum());
-                                        System.out.println("Invalid Bank Account transfer Number!");
-                                        break validationLoop;
-                                    }
+                                        counter++;
+                                        if (counter == userData.size()) {//if all users have been checked
+                                            System.out.println(bnkAccount.getAccountNum());
+                                            System.out.println("Invalid Bank Account transfer Number!");
+                                            break validationLoop;
+                                        }
 
-                                }
+                                    }
 
                                     scanner.nextLine();
                                 }
 
                             }
 
+
+                        }
 
                     }
 

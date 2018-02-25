@@ -2,7 +2,6 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Scanner;
-import java.util.StringTokenizer;
 
 public class BankAccount_3 {
 
@@ -230,7 +229,7 @@ class Tester {
             System.out.println("Welcome to the InterBanking Pty");
             System.out.println("_______________________________");
             while (userData.size() < 2) {//while 2 accounts have been created by a user this will run
-                System.out.println("_______________________________\nWelcome to the ADMIN PORTAL\n_______________________________");
+                System.out.println("_______________________________\nWelcome to the ACCOUNT CREATION PORTAL\n_______________________________");
                 System.out.println("Enter your Authorized Username: ");//Authorized User's username
                 String authNameEntry = scanner.nextLine();//The variable where the user can enter their username
                 System.out.println("Enter your Authorized Password: ");
@@ -269,12 +268,15 @@ class Tester {
             }
             whileLoop:
             while (userData.size() == 2) {
-                System.out.println("\nWelcome to the Account Holders portal!");
+                System.out.println("-------------------------------------------------");
+                System.out.println("\nWelcome to the Account portal!");
+                System.out.println("\n--------------------------------------------------");
                 int accNum = accNumValidation(scanner, "Enter your account number: ");
+                int forecastCounter = 0;
                 validationLoop:
                 for (BankAccount_3 bankAccount_3 : userData) {
                     if (bankAccount_3.getAccountNum() == accNum) {
-                        if (bankAccount_3.getAccountBalance() == 0) {
+                        while (bankAccount_3.getAccountBalance() == 0 || forecastCounter < 2) {
                             int monthsToView = monthValidation(scanner, "Enter the number of months to view the forecast: ");
                             double openingBalance = moneyValidation(scanner, "Enter your opening balance: ");
                             bankAccount_3.setAccountBalance(openingBalance);
@@ -288,17 +290,19 @@ class Tester {
                             } else {
                                 calculateBalance(bankAccount_3.getAccountBalance(), interestRate, autoDeposit, autoWithdrawal, monthsToView);
                                 bankAccount_3.setAccountBalance(setBalance(bankAccount_3.getAccountBalance(), interestRate, autoDeposit, autoWithdrawal, monthsToView));
-                                BufferedReader output = new BufferedReader(new FileReader(bankAccount_3.getCustomerAccName() + "'s user details.txt"));
                                 PrintWriter file = new PrintWriter(new FileWriter(bankAccount_3.getCustomerAccName() + "'s user details.txt"));
                                 file.println(bankAccount_3.toString());
-
-                                String lines = output.readLine();
-                                StringTokenizer token = new StringTokenizer(lines);
-                                int a = Integer.parseInt(token.nextToken());
+                                BufferedReader br = new BufferedReader(new FileReader(bankAccount_3.getCustomerAccName() + "'s user details.txt"));
+                                String line;
+                                while ((line = br.readLine()) != null) {
+                                    System.out.println(line);
+                                }
+                                br.close();
+                                forecastCounter++;
                                 file.flush();
                                 file.close();
                             }
-                        } else if (bankAccount_3.getAccountBalance() >= 0) {
+                        }
                         double transferToAccNum = accNumValidation(scanner, "Enter the account number you want to transfer money to:");
                         for (BankAccount_3 bnkAccount : userData) {
                             TransferLoop:
@@ -375,7 +379,7 @@ class Tester {
 
                             }
 
-                        }
+
                     }
 
                 }

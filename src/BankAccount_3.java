@@ -220,8 +220,6 @@ class Tester {
         ArrayList<BankAccount_3> userData = new ArrayList<>();
         String authUserName = "Muiz";//Authorized Username
         char[] authPassword = "Hello".toCharArray(); //Authorized password
-        userData.add(new BankAccount_3(2222, 0, "1", "1".toCharArray(), 0));
-        userData.add(new BankAccount_3(1111, 0, "1", "123".toCharArray(), 0));
         char exit;//Declaration of the char Variable
         //Label for the do While Loop
         doLoop:

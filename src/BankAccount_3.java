@@ -175,7 +175,7 @@ class Tester {
         return balance;
     }//balance calculator for only withdrawal
 
-    static double setBalance(double balance, double rate, double autoDeposit, double autoWithdraw, int months) {
+    static double calculateBalance(double balance, double rate, double autoDeposit, double autoWithdraw, int months) {
         double balancePerMonth;
         for (int i = 0; i < months; i++) {
             balancePerMonth = (balance * (rate / 12)) + autoDeposit - autoWithdraw;
@@ -273,7 +273,7 @@ class Tester {
                 System.out.println("\n--------------------------------------------------");
                 int accNum = accNumValidation(scanner, "Enter your account number: ");
                 validationLoop:
-//Foreach loop name
+                //Foreach loop name
                 for (BankAccount_3 bankAccount_3 : userData) {
                     if (bankAccount_3.getAccountNum() == accNum) {//Validation of the user's account number
                         while (bankAccount_3.getAccountBalance() == 0 && bankAccount_3.getInterestRate() == 0) {//To check if the user has already applied an auto deposit and withdrawas
@@ -282,14 +282,14 @@ class Tester {
                             double interestRate = interestRateValidator(scanner, "Enter your interest rate: ", bankAccount_3.getAccountBalance(), monthsToView);
                             double autoDeposit = depositValidator(scanner, "Enter automatic monthly deposit: ", bankAccount_3.getAccountBalance(), monthsToView);
                             double autoWithdrawal = withdrawalValidator(scanner, "Enter automatic withdrawal: ", bankAccount_3.getAccountBalance(), monthsToView);
-                            if (setBalance(bankAccount_3.getAccountBalance(), interestRate, autoDeposit, autoWithdrawal, monthsToView) < 0 || setBalance(bankAccount_3.getAccountBalance(), interestRate, autoDeposit, autoWithdrawal, monthsToView) > 100000) {
+                            if (calculateBalance(bankAccount_3.getAccountBalance(), interestRate, autoDeposit, autoWithdrawal, monthsToView) < 0 || calculateBalance(bankAccount_3.getAccountBalance(), interestRate, autoDeposit, autoWithdrawal, monthsToView) > 100000) {
                                 System.out.println("Account balance is out of valid range please try again");
                                 break;
                             } else {
                                 bankAccount_3.setAccountBalance(openingBalance);//setting the balance
                                 bankAccount_3.setInterestRate(interestRate);
                                 balanceTable(bankAccount_3.getAccountBalance(), interestRate, autoDeposit, autoWithdrawal, monthsToView);
-                                bankAccount_3.setAccountBalance(setBalance(bankAccount_3.getAccountBalance(), interestRate, autoDeposit, autoWithdrawal, monthsToView));
+                                bankAccount_3.setAccountBalance(calculateBalance(bankAccount_3.getAccountBalance(), interestRate, autoDeposit, autoWithdrawal, monthsToView));
                                 File fileL = new File(bankAccount_3.getCustomerAccName() + "'s user details.txt");
                                 BufferedWriter file = new BufferedWriter(new FileWriter(bankAccount_3.getCustomerAccName() + "'s user details.txt"));//Writing the
                                 // users data
@@ -302,7 +302,7 @@ class Tester {
 
                             }
                         }
-                        if (bankAccount_3.getInterestRate() > 0) {
+                        if (bankAccount_3.getAccountBalance() > 0) {
                             double transferToAccNum = accNumValidation(scanner, "Enter the account number you want to transfer money to:");
                             for (BankAccount_3 bnkAccount : userData) {
                                 TransferLoop:

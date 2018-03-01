@@ -1,10 +1,9 @@
 import java.io.BufferedReader;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Formatter;
 import java.util.Scanner;
 
 public class BankAccount_4 {
@@ -75,14 +74,14 @@ class BankAccTester {
     static BankAccount_4 enterAccountData() {
         Scanner scanner = new Scanner(System.in);
         int accNum = accNumValidation(scanner, "Enter your account number: ");
+        scanner.nextLine();
         System.out.println("Enter your account name: ");
         String name = scanner.nextLine();
-        scanner.nextLine();
         System.out.println("Enter your password: ");
         char[] password = scanner.nextLine().toCharArray();
         double openingDeposit = moneyValidation(scanner, "Enter your opening deposit: ");
         double intRate = interestRateValidator(scanner, "Enter the interest rate: ");
-        scanner.nextLine();
+
         return new BankAccount_4(accNum, openingDeposit, name, password, intRate);
     }
 
@@ -98,52 +97,43 @@ class BankAccTester {
         Scanner scanner = new Scanner(System.in);
         int years = yearValidation(scanner, "Enter the amount of years to earn interest: ");
         String yEars = String.valueOf(years);
+        System.out.println("Compound Interest for " + yEars + " Years");
+        String values;
         for (int x = 1; x <= years; x++) {
             double amount = bankaccount4.getAccountBalance() * Math.pow(1 + bankaccount4.getInterestRate(), x);
-            return "Compound Interest for " + yEars + "\n\n\n" + String.format("Year " + x + ": %.2f \n", amount);
+            values = "\n\n\n" + String.format("Year " + x + ": %.2f \n", amount);
+            while (x == years) {
+                return values;
+            }
         }
         return "";
     }
 
-    static void dataPersistency(String fileName) {
+    static void dataPersistency(String fileName) throws IOException {
         String line = null;
-        try {
-            // FileReader reads text files in the default encoding.
-            FileReader fileReader =
-                    new FileReader(fileName);
 
-            // Always wrap FileReader in BufferedReader.
-            BufferedReader bufferedReader =
-                    new BufferedReader(fileReader);
+        FileReader fileReader = new FileReader(fileName);
+
+        BufferedReader bufferedReader = new BufferedReader(fileReader);
 
             while ((line = bufferedReader.readLine()) != null) {
                 System.out.println(line);
-            }
 
-            // Always close files.
+
             bufferedReader.close();
-        } catch (FileNotFoundException ex) {
-            System.out.println(
-                    "Unable to open file '" +
-                            fileName + "'");
-        } catch (IOException ex) {
-            System.out.println(
-                    "Error reading file '"
-                            + fileName + "'");
-            // Or we could just do this:
-            // ex.printStackTrace();
         }
 
 
     }
 
     static void dataPersistency(String data, String fileName) throws IOException {
-        Formatter file = new Formatter(fileName + ".txt");
-        file.format(data);
+        PrintWriter writer = new PrintWriter(fileName + ".txt", "UTF-8");
+        writer.println(data);
+        writer.close();
     }
 
-    static void displayAccount(BankAccount_4 bankAccount4) {
-        System.out.println(bankAccount4.toString());
+    static String displayAccount(BankAccount_4 bankAccount4) {
+        return bankAccount4.toString();
     }
 
     private static int yearValidation(Scanner scanner, String message) {
@@ -218,15 +208,17 @@ class BankAccTester {
             System.out.println("\nType 0 as the account number to exit! \nTo continue type any other number\n");
             bankAccount_4 = enterAccountData();
             exit = bankAccount_4.getAccountNum();
+            String customerName = bankAccount_4.getCustomerAccName();
             if (exit != 0) {
                 userData.add(bankAccount_4);
-                dataPersistency(bankAccount_4.toString() + "\n\n" + computeInterest(bankAccount_4), bankAccount_4.getAccountNum() + " - " + bankAccount_4.getCustomerAccName() + "'s Account details");
+                String fileName = exit + " - " + customerName + "'s Account details";
+                dataPersistency(displayAccount(bankAccount_4) + "\n\n" + computeInterest(bankAccount_4), fileName);
 
             }
 
         } while (exit != 0);
         for (BankAccount_4 bankAccount4 : userData) {
-            dataPersistency(bankAccount4.getAccountNum() + " - " + bankAccount4.getCustomerAccName() + "'s Account details");
+            dataPersistency(bankAccount4.getAccountNum() + " - " + bankAccount4.getCustomerAccName() + "'s Account details.txt");
         }
 
     }

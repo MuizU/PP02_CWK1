@@ -3,7 +3,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Scanner;
 
-public class BankAccount_3 {
+public class BankAccount3 {
 
     public static int count;
     public int accountNum;
@@ -12,7 +12,7 @@ public class BankAccount_3 {
     public char[] password;
     public double interestRate;
 
-    public BankAccount_3(int accountNum, double accountBalance, String customerName, char[] password, double interestRate) {
+    public BankAccount3(int accountNum, double accountBalance, String customerName, char[] password, double interestRate) {
         super();
         this.accountNum = accountNum;
         this.accountBalance = accountBalance;
@@ -67,6 +67,7 @@ public class BankAccount_3 {
 }
 
 class Tester {
+
     private static int accNumValidation(Scanner scn, String output) {
         int accNum;
         do {
@@ -216,7 +217,7 @@ class Tester {
 
     public static void main(String[] args) throws IOException {
         Scanner scanner = new Scanner(System.in);
-        ArrayList<BankAccount_3> userData = new ArrayList<>();
+        ArrayList<BankAccount3> userData = new ArrayList<>();
         String authUserName = "Muiz";//Authorized Username
         char[] authPassword = "Hello".toCharArray(); //Authorized password
         char exit;//Declaration of the char Variable
@@ -241,12 +242,12 @@ class Tester {
                     int customerAccNum = accNumValidation(scanner, "Enter customer's account number: ");
                     if (userData.size() == 0) {
 
-                        userData.add(new BankAccount_3(customerAccNum, 0, customerName, customerPassword, 0));
+                        userData.add(new BankAccount3(customerAccNum, 0, customerName, customerPassword, 0));
                         System.out.println("Account creation success!");
 
                     } else {
                         if (userData.get(0).getAccountNum() != customerAccNum) {
-                            userData.add(new BankAccount_3(customerAccNum, 0, customerName, customerPassword, 0));
+                            userData.add(new BankAccount3(customerAccNum, 0, customerName, customerPassword, 0));
                             System.out.println("Account creation success!");
                         } else {
                             System.out.println("Account number already taken\nPlease try again");
@@ -258,7 +259,7 @@ class Tester {
                 }
                 if (userData.size() > 1) {
                     System.out.println("Successfully created accounts:");
-                    for (BankAccount_3 account_3 : userData) {
+                    for (BankAccount3 account_3 : userData) {
                         System.out.println("Bank Account Number: " + account_3.getAccountNum());
                     }
                 }
@@ -272,9 +273,9 @@ class Tester {
                 int accNum = accNumValidation(scanner, "Enter your account number: ");
                 validationLoop:
                 //Foreach loop name
-                for (BankAccount_3 bankAccount_3 : userData) {
+                for (BankAccount3 bankAccount_3 : userData) {
                     if (bankAccount_3.getAccountNum() == accNum) {//Validation of the user's account number
-                        while (bankAccount_3.getAccountBalance() == 0 && bankAccount_3.getInterestRate() == 0) {//To check if the user has already applied an auto deposit and withdrawas
+                        while (bankAccount_3.getAccountBalance() == 0 || bankAccount_3.getInterestRate() == 0) {//To check if the user has already applied an auto deposit and withdrawas
                             int monthsToView = monthValidation(scanner, "Enter the number of months to view the forecast: ");
                             double openingBalance = moneyValidation(scanner, "Enter your opening balance: ");
                             double interestRate = interestRateValidator(scanner, "Enter your interest rate: ", bankAccount_3.getAccountBalance(), monthsToView);
@@ -302,13 +303,13 @@ class Tester {
                         }
                         if (bankAccount_3.getAccountBalance() > 0) {
                             double transferToAccNum = accNumValidation(scanner, "Enter the account number you want to transfer money to:");
-                            for (BankAccount_3 bnkAccount : userData) {
+                            for (BankAccount3 bnkAccount : userData) {
                                 TransferLoop:
                                 if (transferToAccNum != accNum && transferToAccNum == bnkAccount.getAccountNum()) {
                                     //validating the transfer account number is not the users number and is valid
                                     double transferAmount = moneyValidation(scanner, "Enter the amount of money to transfer: $");
                                     int count = 0;
-                                    for (BankAccount_3 bankAccount_ : userData) {
+                                    for (BankAccount3 bankAccount_ : userData) {
 
 
                                         if (bankAccount_.getAccountNum() == accNum && (bankAccount_.getAccountBalance() -
@@ -328,7 +329,7 @@ class Tester {
                                                 }
                                                 System.out.println("Account number: " + bankAccount_3.getAccountNum() + ", Account Balance: $" +
                                                         bankAccount_.getAccountBalance() + "\nTransferred Amount: $" + transferAmount);//Displays transfer amount
-                                                for (BankAccount_3 bankAccount_1_ : userData) {
+                                                for (BankAccount3 bankAccount_1_ : userData) {
                                                     if (bankAccount_1_.getAccountNum() == transferToAccNum) {
                                                         if (bankAccount_1_.getAccountBalance() > 100000) {
                                                             System.out.println("Warning Balance is above $100,000 which is above federally insured amount");
@@ -345,7 +346,7 @@ class Tester {
                                                 }
                                             } else {
                                                 int accNumCount = 0;//Iterator to check the user's who have been iterated
-                                                for (BankAccount_3 bankAccount3 : userData) {
+                                                for (BankAccount3 bankAccount3 : userData) {
                                                     if (bankAccount3.getAccountNum() != accNum) {
                                                         accNumCount++;
                                                         if (accNumCount == userData.size()) {//Iterator to check the

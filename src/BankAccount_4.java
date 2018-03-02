@@ -97,16 +97,13 @@ class BankAccTester {
         Scanner scanner = new Scanner(System.in);
         int years = yearValidation(scanner, "Enter the amount of years to earn interest: ");
         String yEars = String.valueOf(years);
-        System.out.println("Compound Interest for " + yEars + " Years");
-        String values;
+        StringBuilder compoundInterest = new StringBuilder();
+        compoundInterest.append("Compound interest for " + years + " years\n");
         for (int x = 1; x <= years; x++) {
             double amount = bankaccount4.getAccountBalance() * Math.pow(1 + bankaccount4.getInterestRate(), x);
-            values = "\n\n\n" + String.format("Year " + x + ": %.2f \n", amount);
-            while (x == years) {
-                return values;
-            }
+            compoundInterest.append(String.format("Year " + x + ": %s %.2f \n", "$", amount));
         }
-        return "";
+        return compoundInterest.toString();
     }
 
     static void dataPersistency(String fileName) throws IOException {
@@ -118,11 +115,8 @@ class BankAccTester {
 
             while ((line = bufferedReader.readLine()) != null) {
                 System.out.println(line);
-
-
-            bufferedReader.close();
         }
-
+        bufferedReader.close();
 
     }
 

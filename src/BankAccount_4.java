@@ -77,9 +77,9 @@ class BankAccTester {
         Scanner scanner = new Scanner(System.in);
         int accNum = accNumValidation(scanner, "Enter your account number: ");
         scanner.nextLine();
-        System.out.println("Enter your account name: ");
+        System.out.print("Enter your account name: ");
         String name = scanner.nextLine();
-        System.out.println("Enter your password: ");
+        System.out.print("Enter your password: ");
         char[] password = scanner.nextLine().toCharArray();
         double openingDeposit = moneyValidation(scanner, "Enter your opening deposit: ");
         double intRate = interestRateValidator(scanner, "Enter the interest rate: ");
@@ -95,14 +95,13 @@ class BankAccTester {
             System.out.printf("Year " + x + ": %.2f \n" , amount);
         }
     }*/
-    static String computeInterest(BankAccount_4 bankaccount4) {
+    static String computeInterest(BankAccount_4 bankAccount4) {
         Scanner scanner = new Scanner(System.in);
         int years = yearValidation(scanner, "Enter the amount of years to earn interest: ");
-        String yEars = String.valueOf(years);
         StringBuilder compoundInterest = new StringBuilder();
         compoundInterest.append("Compound interest for " + years + " years\n");
         for (int x = 1; x <= years; x++) {
-            double amount = bankaccount4.getAccountBalance() * Math.pow(1 + bankaccount4.getInterestRate(), x);
+            double amount = bankAccount4.getAccountBalance() * Math.pow(1 + bankAccount4.getInterestRate(), x);
             compoundInterest.append(String.format("Year " + x + ": %s %.2f \n", "$", amount));
         }
         return compoundInterest.toString();
@@ -114,7 +113,7 @@ class BankAccTester {
         FileReader fileReader = new FileReader(fileName);
 
         BufferedReader bufferedReader = new BufferedReader(fileReader);
-
+        System.out.println("\n");
             while ((line = bufferedReader.readLine()) != null) {
                 System.out.println(line);
         }
@@ -135,7 +134,7 @@ class BankAccTester {
     private static int yearValidation(Scanner scanner, String message) {
         int year;
         do {
-            System.out.println(message);
+            System.out.print(message);
             while (!scanner.hasNextInt()) {
                 System.out.println("invalid year!\nPlease enter a valid year");
                 scanner.next();
@@ -149,15 +148,14 @@ class BankAccTester {
     private static int accNumValidation(Scanner scn, String output) {
         int accNum;
         do {
-            System.out.println(output);
+            System.out.print(output);
             while (!scn.hasNextInt()) {
                 System.out.println("Invalid input! Try again.");
                 scn.next();
             }
             accNum = scn.nextInt();
-
         }
-        while ((accNum > 9999 || accNum < 1000) && (accNum < 0 || accNum > 0));
+        while ((String.valueOf(accNum).length() != 4) && accNum != 0);
 
         return accNum;
     }//Method to validate the account number
@@ -165,22 +163,21 @@ class BankAccTester {
     private static double interestRateValidator(Scanner scanner, String message) {
         double rate;
         do {
-            System.out.println(message);
+            System.out.print(message);
             while (!scanner.hasNextDouble()) {
                 System.out.println("invalid interest rate!\nPlease enter a valid rate");
                 scanner.next();
             }
             rate = scanner.nextDouble();
-
         }
         while (rate < 0.01 || rate >= 15);
         return rate;
     }
 
-    private static double moneyValidation(Scanner scanner, String message) {
+    public static double moneyValidation(Scanner scanner, String message) {
         double sum;
         do {
-            System.out.println(message);
+            System.out.print(message + "$");
             int count = 0;
             while (!scanner.hasNextDouble() && count == 0) {
                 System.out.println("Invalid Balance has reached maximum");
@@ -192,57 +189,6 @@ class BankAccTester {
         return sum;
     } //Validator for cash inputs
 
-    static double balanceAtEndOfTerm(double balance, double interestRate, int months) {
-        double balancePerMonth;
-        for (int i = 1; i <= months; i++) {
-            balancePerMonth = (balance * (interestRate / 12));
-            balance += balancePerMonth;
-        }
-        return balance;
-    }//balance calculator for only interest
-
-  /*  static double balanceAtEndOfTerm(double balance, int months, double deposit) {
-        for (int i = 1; i <= months; i++) {
-            balance += deposit;
-        }
-        return balance;
-    }//balance calculator for only deposit
-
-    static double balanceAtEndOfTerm(int months, double balance, double withdrawal) {
-        for (int i = 1; i <= months; i++) {
-            balance += withdrawal;
-        }
-        return balance;
-    }//balance calculator for only withdrawal
-    private static double interestRateValidator(Scanner scanner, String message, double balance, int months) {
-        double rate;
-        do {
-            System.out.println(message);
-            while (!scanner.hasNextDouble()) {
-                System.out.println("invalid interest rate!\nPlease enter a valid rate");
-                scanner.next();
-            }
-            rate = scanner.nextDouble();
-
-        }
-        while (rate < 0.01 || rate >= 15 && (balanceAtEndOfTerm(balance, rate, months) < 0 || balanceAtEndOfTerm(balance, rate, months) > 1000000));
-        return rate;
-    }//Validator for interest rate
-    static void balanceTable(double balance, double rate, double autoDeposit, double autoWithdraw, int months) {
-        double balancePerMonth;
-        System.out.println("-----------------------------------------------------------------------------");
-        System.out.printf("%10s %10s %10s  %10s %10s", "YEAR", "|", "MONTH", "|", "BALANCE");
-        System.out.println("\n---------------------------------------------------------------------------");
-        for (int i = 1; i <= months; i++) {
-            balancePerMonth = (balance * (rate / 12)) + autoDeposit - autoWithdraw;
-            balance += balancePerMonth;
-            int year = i / 12;
-            System.out.format("%10d %10s %10d %10s %s %10f", year, "|", i, "|", "$", balance);
-            System.out.println();
-        }
-        System.out.println("-----------------------------------------------------------------------------");
-
-    }//Balance table generator*/
 
 
     public static void main(String[] args) throws IOException {
@@ -253,7 +199,7 @@ class BankAccTester {
 //Label for the do While Loop
         doLoop:
         do {//Start of the do loop
-            System.out.println("\nType 0 as the account number to exit! \nTo continue type any other number\n");
+            System.out.println("\nType 0 as the account number to exit! \nTo continue type any other 4 digit number\n");
             bankAccount_4 = enterAccountData();
             exit = bankAccount_4.getAccountNum();
             String customerName = bankAccount_4.getCustomerAccName();

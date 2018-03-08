@@ -2,19 +2,19 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.Scanner;
 
 public class BankAccount_4 {
 
-    public static int count;
-    public int accountNum;
-    public double accountBalance;
-    public String customerAccName;
-    public char[] password;
-    public double interestRate;
+    private static int count;
+    private int accountNum;
+    private double accountBalance;
+    private String customerAccName;
+    private char[] password;
+    private double interestRate;
 
     public BankAccount_4(int accountNum, double accountBalance, String customerName, char[] password, double interestRate) {
         super();
@@ -25,6 +25,7 @@ public class BankAccount_4 {
         this.interestRate = interestRate;
         count++;
     }
+
 
     public static int getCount() {
         return count;
@@ -195,18 +196,17 @@ class BankAccTester {
     public static void main(String[] args) throws IOException {
         int exit;
         Scanner scanner = new Scanner(System.in);
-        List<BankAccount_4> userData = new ArrayList<BankAccount_4>();
+        Collection<BankAccount_4> userData = new HashSet<BankAccount_4>();
         BankAccount_4 bankAccount_4;
-//Label for the do While Loop
+        //Label for the do While Loop
         doLoop:
         do {//Start of the do loop
             System.out.println("\nType 0 as the account number to exit! \nTo continue type any other 4 digit number\n");
             bankAccount_4 = enterAccountData();
             exit = bankAccount_4.getAccountNum();
-            String customerName = bankAccount_4.getCustomerAccName();
             if (exit != 0) {
                 userData.add(bankAccount_4);
-                String fileName = exit + " - " + customerName + "'s Account details";
+                String fileName = bankAccount_4.getAccountNum() + " - " + bankAccount_4.getCustomerAccName() + "'s Account details";
                 dataPersistency(displayAccount(bankAccount_4) + "\n\n" + computeInterest(bankAccount_4), fileName);
             }
 
@@ -229,7 +229,7 @@ class BankAccTester {
                     for (BankAccount_4 bnkAccount : userData) {
                         if (transferToAccNum != accNum && transferToAccNum == bnkAccount.getAccountNum()) {
                             //validating the transfer account number is not the users number and is valid
-                            double transferAmount = moneyValidation(scanner, "Enter the amount of money to transfer: $");
+                            double transferAmount = moneyValidation(scanner, "Enter the amount of money to transfer: ");
                             int count = 0;
                             for (BankAccount_4 bankAccount_ : userData) {
 
@@ -308,5 +308,6 @@ class BankAccTester {
         } while (exit != 0);
     }
 }
+
 
 

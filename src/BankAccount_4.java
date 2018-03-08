@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Scanner;
 
 public class BankAccount_4 {
@@ -194,7 +195,7 @@ class BankAccTester {
     public static void main(String[] args) throws IOException {
         int exit;
         Scanner scanner = new Scanner(System.in);
-        ArrayList<BankAccount_4> userData = new ArrayList<>();
+        List<BankAccount_4> userData = new ArrayList<BankAccount_4>();
         BankAccount_4 bankAccount_4;
 //Label for the do While Loop
         doLoop:

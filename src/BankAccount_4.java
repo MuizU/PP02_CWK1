@@ -237,7 +237,7 @@ class BankAccTester {
                                     if (bankAccount_.getAccountNum() == accNum) {//
                                         bankAccount_.setAccountBalance(bankAccount_.getAccountBalance() - transferAmount);//removing the transfer amount from the sender
                                         RandomAccessFile sendersFile = new RandomAccessFile(fileName(bankAccount_.getAccountNum(), bankAccount_.getCustomerAccName()), "rw");
-                                        sendersFile.writeBytes(bankAccount_.toString());
+                                        sendersFile.writeBytes(displayAccount(bankAccount_));
                                         System.out.println("Transfer success!");
                                         if (account_4.getAccountNum() == accNum && bankAccount_.getAccountBalance() < 10) {//if senders account balance falls below $10
                                             System.out.println("Warning! Balance has fallen below $10");//Warning message
@@ -253,7 +253,7 @@ class BankAccTester {
                                                     to the receiver's account  */
                                                     RandomAccessFile receiversFile = new RandomAccessFile(fileName(bankAccount4.getAccountNum(), bankAccount4.getCustomerAccName()), "rw");
 
-                                                    receiversFile.writeBytes(bankAccount4.toString());
+                                                    receiversFile.writeBytes(displayAccount(bankAccount4));
 
                                                     receiversFile.close();
                                                     System.out.println("Account number: " +//Displays Balance and account number

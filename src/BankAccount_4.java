@@ -173,6 +173,7 @@ class BankAccTester {
         int exit;
         Scanner scanner = new Scanner(System.in);
         List<BankAccount_4> userData = new ArrayList<>();
+
         BankAccount_4 bankAccount_4;
         //Label for the do While Loop
         doLoop:
@@ -235,6 +236,8 @@ class BankAccTester {
 
                                     if (bankAccount_.getAccountNum() == accNum) {//
                                         bankAccount_.setAccountBalance(bankAccount_.getAccountBalance() - transferAmount);//removing the transfer amount from the sender
+                                        RandomAccessFile sendersFile = new RandomAccessFile(fileName(bankAccount_.getAccountNum(), bankAccount_.getCustomerAccName()), "rw");
+                                        sendersFile.writeBytes(bankAccount_.toString());
                                         System.out.println("Transfer success!");
                                         if (account_4.getAccountNum() == accNum && bankAccount_.getAccountBalance() < 10) {//if senders account balance falls below $10
                                             System.out.println("Warning! Balance has fallen below $10");//Warning message
@@ -248,22 +251,11 @@ class BankAccTester {
                                                 } else {
                                                     bankAccount4.setAccountBalance(bankAccount4.getAccountBalance() + transferAmount);/*Adding the transferred money
                                                     to the receiver's account  */
-                                                    Scanner fileScanner = new Scanner(fileName(
-                                                            bankAccount4.getAccountNum(), bankAccount4.getCustomerAccName()));
-                                                    fileScanner.nextLine();
-                                                    FileWriter fileStream = new FileWriter(fileName(bankAccount4.getAccountNum(),
-                                                            bankAccount4.getCustomerAccName()));
-                                                    BufferedWriter writer = new BufferedWriter(fileStream);
-                                                    while (fileScanner.hasNextLine()) {
-                                                        String next = fileScanner.nextLine();
-                                                        if (next.equals("\n"))
-                                                            writer.newLine();
-                                                        else
-                                                            writer.write(bankAccount4.toString());
-                                                        writer.newLine();
-                                                    }
-                                                    writer.flush();
-                                                    writer.close();
+                                                    RandomAccessFile receiversFile = new RandomAccessFile(fileName(bankAccount4.getAccountNum(), bankAccount4.getCustomerAccName()), "rw");
+
+                                                    receiversFile.writeBytes(bankAccount4.toString());
+
+                                                    receiversFile.close();
                                                     System.out.println("Account number: " +//Displays Balance and account number
                                                             bankAccount4.getAccountNum() + ", Account Balance: $" +
                                                             bankAccount4.getAccountBalance());

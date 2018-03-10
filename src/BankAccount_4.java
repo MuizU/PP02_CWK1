@@ -2,10 +2,7 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Scanner;
+import java.util.*;
 
 public class BankAccount_4 {
 
@@ -26,21 +23,12 @@ public class BankAccount_4 {
         count++;
     }
 
-
     public static int getCount() {
         return count;
     }
 
-    public char[] getPassword() {
-        return password;
-    }
-
     public double getInterestRate() {
         return interestRate;
-    }
-
-    public void setInterestRate(double interestRate) {
-        this.interestRate = interestRate;
     }
 
     public int getAccountNum() {
@@ -89,14 +77,6 @@ class BankAccTester {
         return new BankAccount_4(accNum, openingDeposit, name, password, intRate);
     }
 
-    /*static void computeInterest (BankAccount_4 bankAccount_4){
-        Scanner scanner = new Scanner(System.in);
-        int years = yearValidation(scanner,"Enter the amount of years to earn interest: ");
-        for(int x = 1; x <= years; x++) {
-            double amount = bankAccount_4.getAccountBalance() * Math.pow(1+ bankAccount_4.getInterestRate(), x);
-            System.out.printf("Year " + x + ": %.2f \n" , amount);
-        }
-    }*/
     static String computeInterest(BankAccount_4 bankAccount4) {
         Scanner scanner = new Scanner(System.in);
         int years = yearValidation(scanner, "Enter the amount of years to earn interest: ");
@@ -146,7 +126,6 @@ class BankAccTester {
         } while (year < 0 || year > 50);
         return year;
     }
-
     private static int accNumValidation(Scanner scn, String output) {
         int accNum;
         do {
@@ -161,7 +140,6 @@ class BankAccTester {
 
         return accNum;
     }//Method to validate the account number
-
     private static double interestRateValidator(Scanner scanner, String message) {
         double rate;
         do {
@@ -192,11 +170,10 @@ class BankAccTester {
     } //Validator for cash inputs
 
 
-
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws NoSuchElementException, IOException {
         int exit;
         Scanner scanner = new Scanner(System.in);
-        Collection<BankAccount_4> userData = new HashSet<BankAccount_4>();
+        List<BankAccount_4> userData = new ArrayList<>();
         BankAccount_4 bankAccount_4;
         //Label for the do While Loop
         doLoop:
@@ -205,9 +182,25 @@ class BankAccTester {
             bankAccount_4 = enterAccountData();
             exit = bankAccount_4.getAccountNum();
             if (exit != 0) {
-                userData.add(bankAccount_4);
-                String fileName = bankAccount_4.getAccountNum() + " - " + bankAccount_4.getCustomerAccName() + "'s Account details";
-                dataPersistency(displayAccount(bankAccount_4) + "\n\n" + computeInterest(bankAccount_4), fileName);
+                if (userData.size() == 0) {
+                    userData.add(bankAccount_4);
+                    String fileName = bankAccount_4.getAccountNum() + " - " + bankAccount_4.getCustomerAccName() + "'s Account details";
+                    dataPersistency(displayAccount(bankAccount_4) + "\n\n" + computeInterest(bankAccount_4), fileName);
+                } else {
+                    ListIterator<BankAccount_4> userDataIterator = userData.listIterator();
+                    userDataIterator.hasNext();
+                    BankAccount_4 bankAccount4 = userDataIterator.next();
+                    if (bankAccount4.getAccountNum() != bankAccount_4.getAccountNum()) {
+                        userDataIterator.add(bankAccount_4);
+                        String fileName = bankAccount_4.getAccountNum() + " - " + bankAccount_4.getCustomerAccName() + "'s Account details";
+                        dataPersistency(displayAccount(bankAccount_4) + "\n\n" + computeInterest(bankAccount_4), fileName);
+                    } else {
+                        System.out.println("Bank account number matches an already existing number!\n" +
+                                "Please Try again!");
+                    }
+
+
+                }
             }
 
         } while (exit != 0);
@@ -258,7 +251,8 @@ class BankAccTester {
                                                 } else {
                                                     bankAccount_1_.setAccountBalance(bankAccount_1_.getAccountBalance() + transferAmount);/*Adding the transferred money
                                                     to the receiver's account  */
-
+                                                    //  Scanner fileScanner = new Scanner(bankAccount_1_.getAccountNum() + " - " + bankAccount_1_.getCustomerAccName() + "'s Account details";);
+                                                    //  fileScanner.nextLine();
                                                     System.out.println("Account number: " +//Displays Balance and account number
                                                             bankAccount_1_.getAccountNum() + ", Account Balance: $" +
                                                             bankAccount_1_.getAccountBalance());

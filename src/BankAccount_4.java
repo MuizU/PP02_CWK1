@@ -24,6 +24,10 @@ public class BankAccount_4 {
         return count;
     }
 
+    public char[] getPassword() {
+        return password;
+    }
+
     public double getInterestRate() {
         return interestRate;
     }
@@ -173,11 +177,11 @@ class BankAccTester {
         int exit;
         Scanner scanner = new Scanner(System.in);
         List<BankAccount_4> userData = new ArrayList<>();
-
         BankAccount_4 bankAccount_4;
         //Label for the do While Loop
         doLoop:
         do {//Start of the do loop
+            exit = 1;
             System.out.println("\nType 0 as the account number to exit! \nTo continue type any other 4 digit number\n");
             bankAccount_4 = enterAccountData();
             exit = bankAccount_4.getAccountNum();
@@ -185,14 +189,16 @@ class BankAccTester {
                 if (userData.size() == 0) {
                     userData.add(bankAccount_4);
                     // String fileName = bankAccount_4.getAccountNum() + " - " + bankAccount_4.getCustomerAccName() + "'s Account details";
-                    dataPersistency(displayAccount(bankAccount_4) + "\n\n" + computeInterest(bankAccount_4), fileName(bankAccount_4.getAccountNum(), bankAccount_4.getCustomerAccName()));
+                    dataPersistency(displayAccount(bankAccount_4) + "\n\n" + computeInterest(bankAccount_4),
+                            fileName(bankAccount_4.getAccountNum(), bankAccount_4.getCustomerAccName()));
                 } else {
                     ListIterator<BankAccount_4> userDataIterator = userData.listIterator();
                     userDataIterator.hasNext();
                     BankAccount_4 bankAccount4 = userDataIterator.next();
                     if (bankAccount4.getAccountNum() != bankAccount_4.getAccountNum()) {
                         userDataIterator.add(bankAccount_4);
-                        dataPersistency(displayAccount(bankAccount_4) + "\n\n" + computeInterest(bankAccount_4), fileName(bankAccount_4.getAccountNum(), bankAccount_4.getCustomerAccName()));
+                        dataPersistency(displayAccount(bankAccount_4) + "\n\n" + computeInterest(bankAccount_4),
+                                fileName(bankAccount_4.getAccountNum(), bankAccount_4.getCustomerAccName()));
                     } else {
                         System.out.println("Bank account number matches an already existing number!\n" +
                                 "Please Try again!");
@@ -205,17 +211,20 @@ class BankAccTester {
         for (BankAccount_4 bankAccount4 : userData) {
             dataPersistency(bankAccount4.getAccountNum() + " - " + bankAccount4.getCustomerAccName() + "'s Account details.txt");
         }
+
+        System.out.println("-------------------------------------------------");
+        System.out.println("\nWelcome to the Account portal!");
+        System.out.println("\n--------------------------------------------------");
         doLoop:
         do {
-            System.out.println("-------------------------------------------------");
-            System.out.println("\nWelcome to the Account portal!");
-            System.out.println("\n--------------------------------------------------");
             int accNum = accNumValidation(scanner, "Enter your account number: or type 0 to exit: ");
+            System.out.print("Enter your password: ");
+            char usersPassword[] = scanner.next().toCharArray();
             validationLoop:
-            //Foreach loop name
             for (BankAccount_4 account_4 : userData) {
                 ifLoop:
-                if (account_4.getAccountNum() == accNum && account_4.getAccountBalance() > 0) {//Validation of the user's account number
+                if (account_4.getAccountNum() == accNum && Arrays.equals(usersPassword, account_4.getPassword())) {
+                    //Validation of the user's account number
                     int transferToAccNum = accNumValidation(scanner, "Enter the account number to transfer money to: ");
                     for (BankAccount_4 bnkAccount : userData) {
                         if (transferToAccNum != accNum && transferToAccNum == bnkAccount.getAccountNum()) {
@@ -229,17 +238,21 @@ class BankAccTester {
                                         transferAmount) < 0)
                                 //Checking if the account balance falls below $10
                                 {
-                                    System.out.println("Error! Account balance is less than $0.00"); //Error message when account Balance falls below $0.00
+                                    System.out.println("Error! Account balance is less than $0.00");
+                                    //Error message when account Balance falls below $0.00
                                     break doLoop; //program ends
                                 } else { //If transfer amount is greater than account balance
                                     count++;
 
                                     if (bankAccount_.getAccountNum() == accNum) {//
-                                        bankAccount_.setAccountBalance(bankAccount_.getAccountBalance() - transferAmount);//removing the transfer amount from the sender
-                                        RandomAccessFile sendersFile = new RandomAccessFile(fileName(bankAccount_.getAccountNum(), bankAccount_.getCustomerAccName()), "rw");
+                                        bankAccount_.setAccountBalance(bankAccount_.getAccountBalance() - transferAmount);
+                                        //removing the transfer amount from the sender
+                                        RandomAccessFile sendersFile = new RandomAccessFile(fileName(bankAccount_.getAccountNum(),
+                                                bankAccount_.getCustomerAccName()), "rw");
                                         sendersFile.writeBytes(displayAccount(bankAccount_));
                                         System.out.println("Transfer success!");
-                                        if (account_4.getAccountNum() == accNum && bankAccount_.getAccountBalance() < 10) {//if senders account balance falls below $10
+                                        if (account_4.getAccountNum() == accNum && bankAccount_.getAccountBalance() < 10) {
+                                            //if senders account balance falls below $10
                                             System.out.println("Warning! Balance has fallen below $10");//Warning message
                                         }
                                         System.out.println("Account number: " + account_4.getAccountNum() + ", Account Balance: $" +
@@ -249,9 +262,12 @@ class BankAccTester {
                                                 if (bankAccount4.getAccountBalance() > 100000) {
                                                     System.out.println("Warning Balance is above $100,000 which is above federally insured amount");
                                                 } else {
-                                                    bankAccount4.setAccountBalance(bankAccount4.getAccountBalance() + transferAmount);/*Adding the transferred money
+                                                    bankAccount4.setAccountBalance(bankAccount4.getAccountBalance() + transferAmount);
+                                                    /*Adding the transferred money
                                                     to the receiver's account  */
-                                                    RandomAccessFile receiversFile = new RandomAccessFile(fileName(bankAccount4.getAccountNum(), bankAccount4.getCustomerAccName()), "rw");
+                                                    RandomAccessFile receiversFile = new RandomAccessFile(fileName(bankAccount4.getAccountNum(),
+                                                            bankAccount4.getCustomerAccName()),
+                                                            "rw");
 
                                                     receiversFile.writeBytes(displayAccount(bankAccount4));
 
@@ -292,7 +308,6 @@ class BankAccTester {
 
                             }
 
-                            scanner.nextLine();
                         }
 
                     }
@@ -302,6 +317,7 @@ class BankAccTester {
 
             }
             exit = accNum;
+            scanner.nextLine();
         } while (exit != 0);
     }
 }

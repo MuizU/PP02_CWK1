@@ -1,7 +1,4 @@
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.*;
 import java.util.*;
 
 public class BankAccount_4 {
@@ -104,7 +101,7 @@ class BankAccTester {
     }
 
     static void dataPersistency(String data, String fileName) throws IOException {
-        PrintWriter writer = new PrintWriter(fileName + ".txt", "UTF-8");
+        PrintWriter writer = new PrintWriter(fileName, "UTF-8");
         writer.println(data);
         writer.close();
     }
@@ -169,7 +166,9 @@ class BankAccTester {
         return sum;
     } //Validator for cash inputs
 
-
+    private static String fileName(int accountNumber, String accountName) {
+        return accountNumber + " - " + accountName + "'s Account details.txt";
+    }
     public static void main(String[] args) throws NoSuchElementException, IOException {
         int exit;
         Scanner scanner = new Scanner(System.in);
@@ -184,16 +183,15 @@ class BankAccTester {
             if (exit != 0) {
                 if (userData.size() == 0) {
                     userData.add(bankAccount_4);
-                    String fileName = bankAccount_4.getAccountNum() + " - " + bankAccount_4.getCustomerAccName() + "'s Account details";
-                    dataPersistency(displayAccount(bankAccount_4) + "\n\n" + computeInterest(bankAccount_4), fileName);
+                    // String fileName = bankAccount_4.getAccountNum() + " - " + bankAccount_4.getCustomerAccName() + "'s Account details";
+                    dataPersistency(displayAccount(bankAccount_4) + "\n\n" + computeInterest(bankAccount_4), fileName(bankAccount_4.getAccountNum(), bankAccount_4.getCustomerAccName()));
                 } else {
                     ListIterator<BankAccount_4> userDataIterator = userData.listIterator();
                     userDataIterator.hasNext();
                     BankAccount_4 bankAccount4 = userDataIterator.next();
                     if (bankAccount4.getAccountNum() != bankAccount_4.getAccountNum()) {
                         userDataIterator.add(bankAccount_4);
-                        String fileName = bankAccount_4.getAccountNum() + " - " + bankAccount_4.getCustomerAccName() + "'s Account details";
-                        dataPersistency(displayAccount(bankAccount_4) + "\n\n" + computeInterest(bankAccount_4), fileName);
+                        dataPersistency(displayAccount(bankAccount_4) + "\n\n" + computeInterest(bankAccount_4), fileName(bankAccount_4.getAccountNum(), bankAccount_4.getCustomerAccName()));
                     } else {
                         System.out.println("Bank account number matches an already existing number!\n" +
                                 "Please Try again!");
@@ -202,7 +200,6 @@ class BankAccTester {
 
                 }
             }
-
         } while (exit != 0);
         for (BankAccount_4 bankAccount4 : userData) {
             dataPersistency(bankAccount4.getAccountNum() + " - " + bankAccount4.getCustomerAccName() + "'s Account details.txt");
@@ -244,18 +241,32 @@ class BankAccTester {
                                         }
                                         System.out.println("Account number: " + account_4.getAccountNum() + ", Account Balance: $" +
                                                 bankAccount_.getAccountBalance() + "\nTransferred Amount: $" + transferAmount);//Displays transfer amount
-                                        for (BankAccount_4 bankAccount_1_ : userData) {
-                                            if (bankAccount_1_.getAccountNum() == transferToAccNum) {
-                                                if (bankAccount_1_.getAccountBalance() > 100000) {
+                                        for (BankAccount_4 bankAccount4 : userData) {
+                                            if (bankAccount4.getAccountNum() == transferToAccNum) {
+                                                if (bankAccount4.getAccountBalance() > 100000) {
                                                     System.out.println("Warning Balance is above $100,000 which is above federally insured amount");
                                                 } else {
-                                                    bankAccount_1_.setAccountBalance(bankAccount_1_.getAccountBalance() + transferAmount);/*Adding the transferred money
+                                                    bankAccount4.setAccountBalance(bankAccount4.getAccountBalance() + transferAmount);/*Adding the transferred money
                                                     to the receiver's account  */
-                                                    //  Scanner fileScanner = new Scanner(bankAccount_1_.getAccountNum() + " - " + bankAccount_1_.getCustomerAccName() + "'s Account details";);
-                                                    //  fileScanner.nextLine();
+                                                    Scanner fileScanner = new Scanner(fileName(
+                                                            bankAccount4.getAccountNum(), bankAccount4.getCustomerAccName()));
+                                                    fileScanner.nextLine();
+                                                    FileWriter fileStream = new FileWriter(fileName(bankAccount4.getAccountNum(),
+                                                            bankAccount4.getCustomerAccName()));
+                                                    BufferedWriter writer = new BufferedWriter(fileStream);
+                                                    while (fileScanner.hasNextLine()) {
+                                                        String next = fileScanner.nextLine();
+                                                        if (next.equals("\n"))
+                                                            writer.newLine();
+                                                        else
+                                                            writer.write(bankAccount4.toString());
+                                                        writer.newLine();
+                                                    }
+                                                    writer.flush();
+                                                    writer.close();
                                                     System.out.println("Account number: " +//Displays Balance and account number
-                                                            bankAccount_1_.getAccountNum() + ", Account Balance: $" +
-                                                            bankAccount_1_.getAccountBalance());
+                                                            bankAccount4.getAccountNum() + ", Account Balance: $" +
+                                                            bankAccount4.getAccountBalance());
                                                     break ifLoop;
                                                 }
                                             }

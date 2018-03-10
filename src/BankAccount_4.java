@@ -64,7 +64,7 @@ public class BankAccount_4 {
 
 class BankAccTester {
 
-    static BankAccount_4 enterAccountData() {
+    static BankAccount_4 enterAccountData() {//Method to create a Bank account object
         Scanner scanner = new Scanner(System.in);
         int accNum = accNumValidation(scanner, "Enter your account number: ");
         scanner.nextLine();
@@ -78,19 +78,23 @@ class BankAccTester {
         return new BankAccount_4(accNum, openingDeposit, name, password, intRate);
     }
 
-    static String computeInterest(BankAccount_4 bankAccount4) {
+    static String computeInterest(BankAccount_4 bankAccount4) {//method to calculate the interest
         Scanner scanner = new Scanner(System.in);
         int years = yearValidation(scanner, "Enter the amount of years to earn interest: ");
         StringBuilder compoundInterest = new StringBuilder();
-        compoundInterest.append("Compound interest for " + years + " years\n");
-        for (int x = 1; x <= years; x++) {
-            double amount = bankAccount4.getAccountBalance() * Math.pow(1 + bankAccount4.getInterestRate(), x);
-            compoundInterest.append(String.format("Year " + x + ": %s %.2f \n", "$", amount));
+        compoundInterest.append("Compound interest for " + years + " years" + " at " + bankAccount4.getInterestRate() + "%" + " per year\n\n");
+        compoundInterest.append(String.format("%10s %10s %10s", "YEAR", "|", "BALANCE"));
+        compoundInterest.append("\n---------------------------------------------------------------------------");
+        for (int year = 1; year <= years; year++) {
+            double amount = bankAccount4.getAccountBalance() * Math.pow(1 + bankAccount4.getInterestRate(), year);
+            compoundInterest.append((System.lineSeparator()));
+            compoundInterest.append(String.format("%10d %10s %s %10f", year, "|", "$", amount));
         }
+        compoundInterest.append("\n---------------------------------------------------------------------------");
         return compoundInterest.toString();
     }
 
-    static void dataPersistency(String fileName) throws IOException {
+    static void dataPersistency(String fileName) throws IOException {//Method to read from the file
         String line = null;
 
         FileReader fileReader = new FileReader(fileName);
@@ -104,17 +108,18 @@ class BankAccTester {
 
     }
 
-    static void dataPersistency(String data, String fileName) throws IOException {
+    static void dataPersistency(String data, String fileName) throws IOException {//Method to write to the file
         PrintWriter writer = new PrintWriter(fileName, "UTF-8");
         writer.println(data);
         writer.close();
     }
 
-    static String displayAccount(BankAccount_4 bankAccount4) {
+    static String displayAccount(BankAccount_4 bankAccount4) {//Method that will return
+        // the toString value of an object
         return bankAccount4.toString();
     }
 
-    private static int yearValidation(Scanner scanner, String message) {
+    private static int yearValidation(Scanner scanner, String message) {//Method to validate the years
         int year;
         do {
             System.out.print(message);
@@ -153,7 +158,7 @@ class BankAccTester {
         }
         while (rate < 0.01 || rate >= 15);
         return rate;
-    }
+    }//Method to validate the interest rate
 
     public static double moneyValidation(Scanner scanner, String message) {
         double sum;
@@ -181,7 +186,6 @@ class BankAccTester {
         //Label for the do While Loop
         doLoop:
         do {//Start of the do loop
-            exit = 1;
             System.out.println("\nType 0 as the account number to exit! \nTo continue type any other 4 digit number\n");
             bankAccount_4 = enterAccountData();
             exit = bankAccount_4.getAccountNum();
@@ -223,7 +227,7 @@ class BankAccTester {
             validationLoop:
             for (BankAccount_4 account_4 : userData) {
                 ifLoop:
-                if (account_4.getAccountNum() == accNum && Arrays.equals(usersPassword, account_4.getPassword())) {
+                if (account_4.getAccountNum() == accNum && Arrays.equals(usersPassword, account_4.getPassword())) {//To check if the login credentials are correct
                     //Validation of the user's account number
                     int transferToAccNum = accNumValidation(scanner, "Enter the account number to transfer money to: ");
                     for (BankAccount_4 bnkAccount : userData) {
@@ -269,7 +273,7 @@ class BankAccTester {
                                                             bankAccount4.getCustomerAccName()),
                                                             "rw");
 
-                                                    receiversFile.writeBytes(displayAccount(bankAccount4));
+                                                    receiversFile.writeBytes(displayAccount(bankAccount4));//updates the account information
 
                                                     receiversFile.close();
                                                     System.out.println("Account number: " +//Displays Balance and account number

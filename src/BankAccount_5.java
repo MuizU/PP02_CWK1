@@ -1,8 +1,5 @@
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Scanner;
+import java.util.*;
 
 public class BankAccount_5 {
     private static int count;
@@ -66,22 +63,41 @@ class BankAccountGenerator extends BankAccount {
     public static void main(String[] args) {
         int exitKey;
         Scanner scanner = new Scanner(System.in);
-        Collection<BankAccount_5> userData = new ArrayList<>();
+        List<BankAccount_5> userData = new ArrayList<>();
         BankAccount_5 bankAccount_5;
         BankAccountGenerator bankAccountGenerator = new BankAccountGenerator();
+        doLoop:
         do {
             System.out.println("-------------------------------------------------");
             System.out.println("\nWelcome to InterBanking PTY");
             System.out.println("\n--------------------------------------------------");
-            System.out.println("Type 'x' as the account Number to exit");
+            System.out.println("Type '0' as the account Number to exit");
             bankAccount_5 = bankAccountGenerator.enterAccountData();
             exitKey = bankAccount_5.getAccountNum();
-            if (exitKey != 0 || userData.size() < 10) {
-                int years = bankAccountGenerator.yearValidation(scanner, "Enter the amount of years to get interest");
-                System.out.println(bankAccountGenerator.computeInterest(years, bankAccount_5));
-                userData.add(bankAccount_5);
+            if (exitKey != 0 && userData.size() < 10) {
+                if (userData.size() == 0) {
+                    userData.add(bankAccount_5);
+                    int years = bankAccountGenerator.yearValidation(scanner, "Enter the amount of years to" +
+                            " receive interest: ");
+                    System.out.println("\n" + bankAccount_5.toString() + "\n");
+                    System.out.println(bankAccountGenerator.computeInterest(years, bankAccount_5));
+                } else {
+                    ListIterator<BankAccount_5> userDataIterator = userData.listIterator();
+                    userDataIterator.hasNext();
+                    BankAccount_5 bankAccount5 = userDataIterator.next();
+                    if (bankAccount5.getAccountNum() != bankAccount_5.getAccountNum()) {
+                        userDataIterator.add(bankAccount_5);
+                        System.out.println(bankAccount_5.toString());
+                        int years = bankAccountGenerator.yearValidation(scanner, "Enter the amount of years to" +
+                                " receive interest: ");
+                        System.out.println("\n" + bankAccount_5.toString() + "\n");
+                        System.out.println(bankAccountGenerator.computeInterest(years, bankAccount_5));
+                    } else {
+                        System.out.println("Bank Account number is already taken!");
+                    }
+                }
             }
-        } while (exitKey != 0 || userData.size() < 10);
+        } while (exitKey != 0 && userData.size() < 10);
     }
 
     @Override

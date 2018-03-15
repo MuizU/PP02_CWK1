@@ -1,9 +1,13 @@
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.math.BigDecimal;
 import java.util.*;
 
 public class BankAccount_5 {
     private static int count;
-    private final double interestRate;
+    private final static double interestRate = 0.03;
     private int accountNum;
     private BigDecimal accountBalance;
     private String customerAccName;
@@ -14,7 +18,6 @@ public class BankAccount_5 {
         this.accountBalance = accountBalance;
         this.customerAccName = customerAccName;
         this.password = password;
-        this.interestRate = 0.03;
     }
 
     public static int getCount() {
@@ -175,12 +178,29 @@ class BankAccountGenerator extends BankAccount {
                 scanner.next();
             }
             year = scanner.nextInt();
-
         } while (year < 0 || year > 50);
         return year;
+
+    }
+
+    public void dataPersistency(String fileName) throws IOException {//Method to read from the file
+        String line = null;
+        FileReader fileReader = new FileReader(fileName);
+        BufferedReader bufferedReader = new BufferedReader(fileReader);
+        System.out.println("\n");
+        while ((line = bufferedReader.readLine()) != null) {
+            System.out.println(line);
+        }
+        bufferedReader.close();
+
+    }
+
+    public void dataPersistency(String data, String fileName) throws IOException {//Method to write to the file
+        PrintWriter writer = new PrintWriter(fileName, "UTF-8");
+        writer.println(data);
+        writer.close();
     }
 }
-
 abstract class BankAccount {
     public abstract BankAccount_5 enterAccountData();
 
@@ -194,4 +214,7 @@ abstract class BankAccount {
 
     public abstract int yearValidation(Scanner scanner, String message);
 
+    public abstract void dataPersistency(String fileName) throws IOException;
+
+    public abstract void dataPersistency(String data, String fileName) throws IOException;
 }

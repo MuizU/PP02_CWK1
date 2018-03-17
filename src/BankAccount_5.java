@@ -5,6 +5,8 @@ import java.io.PrintWriter;
 import java.math.BigDecimal;
 import java.util.*;
 
+import static java.lang.System.err;
+
 public class BankAccount_5 {
     private static int count;
     private final static double interestRate = 0.03;
@@ -66,7 +68,8 @@ class BankAccountGenerator extends BankAccount {
     public static void main(String[] args) {
         int exitKey;
         Scanner scanner = new Scanner(System.in);
-        List<BankAccount_5> userData = new ArrayList<>();
+        Map<String, BankAccount_5> userData = new HashMap<>();
+        Map<Integer, String> interest = new HashMap<>();
         BankAccount_5 bankAccount_5;
         BankAccountGenerator bankAccountGenerator = new BankAccountGenerator();
         doLoop:
@@ -79,22 +82,25 @@ class BankAccountGenerator extends BankAccount {
             exitKey = bankAccount_5.getAccountNum();
             if (exitKey != 0 && userData.size() < 10) {
                 if (userData.size() == 0) {
-                    userData.add(bankAccount_5);
+                    userData.put(String.valueOf(bankAccount_5.getAccountNum()), bankAccount_5);
                     int years = bankAccountGenerator.yearValidation(scanner, "Enter the amount of years to" +
                             " receive interest: ");
                     System.out.println("\n" + bankAccount_5.toString() + "\n");
+                    interest.put(bankAccount_5.getAccountNum(), bankAccountGenerator.computeInterest(years, bankAccount_5));
                     System.out.println(bankAccountGenerator.computeInterest(years, bankAccount_5));
                 } else {
-                    ListIterator<BankAccount_5> userDataIterator = userData.listIterator();
+                    int years = bankAccountGenerator.yearValidation(scanner, "Enter the amount of years to" +
+                            " receive interest: ");
+                    Iterator<Map.Entry<String, BankAccount_5>> userDataIterator = userData.entrySet().iterator();
                     userDataIterator.hasNext();
-                    BankAccount_5 bankAccount5 = userDataIterator.next();
+                    BankAccount_5 bankAccount5 = (BankAccount_5) userDataIterator.next();
                     if (bankAccount5.getAccountNum() != bankAccount_5.getAccountNum()) {
-                        userDataIterator.add(bankAccount_5);
-                        System.out.println(bankAccount_5.toString());
-                        int years = bankAccountGenerator.yearValidation(scanner, "Enter the amount of years to" +
-                                " receive interest: ");
-                        System.out.println("\n" + bankAccount_5.toString() + "\n");
-                        System.out.println(bankAccountGenerator.computeInterest(years, bankAccount_5));
+                        while (userDataIterator.hasNext()) {
+                            userData.put(String.valueOf(bankAccount5.getAccountNum()), bankAccount5);
+
+                            System.out.println("\n" + bankAccountGenerator.displayAccount(bankAccount5) + "\n");
+                            System.out.println(bankAccountGenerator.computeInterest(years, bankAccount_5));
+                        }
                     } else {
                         System.out.println("Bank Account number is already taken!");
                     }
@@ -159,13 +165,17 @@ class BankAccountGenerator extends BankAccount {
         do {
             System.out.print(message);
             while (!scanner.hasNextInt()) {
-                System.out.println("Invalid input! Try again.");
+                err.println("Invalid input! Try again.");
+                System.out.print("Enter your account number: ");
                 scanner.next();
             }
             accNum = scanner.nextInt();
+            if (String.valueOf(accNum).length() != 4 || accNum == 0) {
+                System.out.println("Error! Invalid account number!\nPlease enter a number within the range of 1000 to 9999");
+            }
         }
-        while ((String.valueOf(accNum).length() != 4) && accNum != 0);
 
+        while ((String.valueOf(accNum).length() != 4) && accNum != 0);
         return accNum;
     }
 

@@ -1,16 +1,13 @@
 import java.io.*;
 import java.math.BigDecimal;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Scanner;
+import java.util.*;
 
 import static java.lang.System.err;
 
 public class BankAccountTester {
 
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException, ConcurrentModificationException {
         int exitKey;
         Scanner scanner = new Scanner(System.in);
         Map<Integer, BankAccount> userData = new HashMap<>();
@@ -27,7 +24,7 @@ public class BankAccountTester {
             if (exitKey != 0 && userData.size() < 10) {
                 if (userData.size() == 0) {
 
-                    int years = yearValidation(scanner, "Enter the amount of years to" +
+                    int years = yearValidation(scanner, "Enter the amount of years to" +//Number of years to get validation
                             " receive interest: ");
                     userData.put(bankAccount.getAccountNum(), bankAccount);
                     System.out.println("\n" + bankAccount.displayAccount() + "\n");
@@ -38,8 +35,8 @@ public class BankAccountTester {
                 } else {
                     int years = yearValidation(scanner, "Enter the amount of years to" +
                             " receive interest: ");
-                    for (Map.Entry<Integer, BankAccount> entry : userData.entrySet())
-                        if (entry.getKey() != bankAccount.getAccountNum()) {
+                    for (int key : userData.keySet()) {
+                        if (key != bankAccount.getAccountNum()) {
                             userData.put(bankAccount.getAccountNum(), bankAccount);
                             interest.put(bankAccount.getAccountNum(), BankAccount.computeInterest(years, bankAccount));
                             System.out.println("\n" + bankAccount.displayAccount() + "\n");
@@ -51,6 +48,7 @@ public class BankAccountTester {
                             System.err.println("Bank Account number is already taken!\nPlease try again");
                             System.out.println();
                         }
+                    }
                 }
             }
         } while (exitKey != 0 && userData.size() < 10);
@@ -67,20 +65,21 @@ public class BankAccountTester {
                 System.out.print("Enter your password: ");
                 char usersPassword[] = scanner.next().toCharArray();
                 validationLoop:
-                for (Map.Entry<Integer, BankAccount> entry : userData.entrySet()) {
+                for (int key : userData.keySet()) {
                     ifLoop:
-                    if (entry.getKey() == accNum && Arrays.equals(usersPassword, entry.getValue().getPassword())) {//To check if the login credentials are correct
+                    if (key == accNum && Arrays.equals(usersPassword, userData.get(key).getPassword())) {//To check
+                        // if the login credentials are correct
                         //Validation of the user's account number
                         int transferToAccNum = accNumValidation(scanner, "Enter the account number to transfer money to: ");
-                        for (Map.Entry<Integer, BankAccount> Entry : userData.entrySet()) {
-                            if (transferToAccNum != accNum && transferToAccNum == Entry.getValue().getAccountNum()) {
+                        for (int keyValue : userData.keySet()) {
+                            if (transferToAccNum != accNum && transferToAccNum == keyValue) {
                                 //validating the transfer account number is not the users number and is valid
                                 BigDecimal transferAmount = moneyValidation(scanner, "Enter the amount of money to transfer: ");
                                 int counter = 0;
-                                for (Map.Entry<Integer, BankAccount> eNtry : userData.entrySet()) {
+                                for (int keyVal : userData.keySet()) {
 
 
-                                    if (eNtry.getKey() == accNum && (eNtry.getValue().getAccountBalance().doubleValue() -
+                                    if (keyVal == accNum && (userData.get(keyVal).getAccountBalance().doubleValue() -
                                             transferAmount.doubleValue()) < 0)
                                     //Checking if the account balance falls below $10
                                     {
@@ -90,33 +89,36 @@ public class BankAccountTester {
                                     } else { //If transfer amount is greater than account balance
                                         counter++;
 
-                                        if (eNtry.getKey() == accNum) {//
-                                            eNtry.getValue().setAccountBalance(new BigDecimal(eNtry.getValue().getAccountBalance().doubleValue() - transferAmount.doubleValue()));
+                                        if (keyVal == accNum) {//
+                                            userData.get(keyVal).setAccountBalance(new BigDecimal(userData.get(keyVal).getAccountBalance().doubleValue()
+                                                    - transferAmount.doubleValue()));
                                             //removing the transfer amount from the sender
-                                            RandomAccessFile sendersFile = new RandomAccessFile(fileName(eNtry.getValue()), "rw");
-                                            sendersFile.writeBytes(entry.getValue().displayAccount());
+                                            RandomAccessFile sendersFile = new RandomAccessFile(fileName(userData.get(keyVal)), "rw");
+                                            sendersFile.writeBytes(userData.get(key).displayAccount());
                                             System.out.println("Transfer success!");
-                                            if (entry.getValue().getAccountNum() == accNum && eNtry.getValue().getAccountBalance().doubleValue() < 10) {
+                                            if (userData.get(keyVal).getAccountBalance().doubleValue() < 10) {
                                                 //if senders account balance falls below $10
                                                 System.out.println("Warning! Balance has fallen below $10");//Warning message
                                             }
-                                            System.out.println("Account number: " + entry.getValue().getAccountNum() + ", Account Balance: $" +
-                                                    eNtry.getValue().getAccountBalance() + "\nTransferred Amount: $" + transferAmount);//Displays transfer amount
-                                            for (Map.Entry<Integer, BankAccount> entRy : userData.entrySet()) {
-                                                if (entRy.getKey() == transferToAccNum) {
-                                                    if (entRy.getValue().getAccountBalance().doubleValue() > 100000) {
+                                            System.out.println("Account number: " + userData.get(key).getAccountNum() + ", Account Balance: $" +
+                                                    userData.get(keyVal).getAccountBalance() + "\nTransferred Amount: $" + transferAmount);//Displays
+                                            // transfer amount
+                                            for (int keyvalue : userData.keySet()) {
+                                                if (keyvalue == transferToAccNum) {
+                                                    if (userData.get(keyvalue).getAccountBalance().doubleValue() > 100000) {
                                                         System.out.println("Warning Balance is above $100,000 which is above federally insured amount");
                                                     } else {
-                                                        entRy.getValue().setAccountBalance(new BigDecimal(entRy.getValue().getAccountBalance().doubleValue() + transferAmount.doubleValue()));
+                                                        userData.get(keyvalue).setAccountBalance(new BigDecimal(userData.get(keyvalue).getAccountBalance().doubleValue()
+                                                                + transferAmount.doubleValue()));
                                                     /*Adding the transferred money
                                                     to the receiver's account  */
-                                                        RandomAccessFile receiversFile = new RandomAccessFile(fileName(entRy.getValue()),
+                                                        RandomAccessFile receiversFile = new RandomAccessFile(fileName(userData.get(keyvalue)),
                                                                 "rw");
 
-                                                        receiversFile.writeBytes(entRy.getValue().displayAccount());//updates the account information
+                                                        receiversFile.writeBytes(userData.get(keyvalue).displayAccount());//updates the account information
 
                                                         receiversFile.close();
-                                                        dataPersistency(fileName(entRy.getValue()));
+                                                        dataPersistency(fileName(userData.get(keyvalue)));
                                                         break ifLoop;
                                                     }
                                                 }
@@ -139,11 +141,11 @@ public class BankAccountTester {
 
                             } else {
                                 int counter = 0;//Iterator to check the user's who have been iterated
-                                if (transferToAccNum == accNum && transferToAccNum != Entry.getKey()) {/*To check the transferee's
+                                if (transferToAccNum == accNum && transferToAccNum != keyValue) {/*To check the transferee's
                            account number     */
                                     counter++;
                                     if (counter == userData.size()) {//if all users have been checked
-                                        System.out.println(Entry.getKey());
+                                        System.out.println(keyValue);
                                         System.out.println("Invalid Bank Account transfer Number!");
                                         break validationLoop;
                                     }

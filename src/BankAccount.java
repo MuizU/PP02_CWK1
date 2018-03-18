@@ -21,7 +21,7 @@ public class BankAccount {
         return count;
     }
 
-    public static BankAccount enterAccountData() {
+    public static BankAccount enterAccountData() {// Method to create bank account
         Scanner scanner = new Scanner(System.in);
         int accNum = BankAccountTester.accNumValidation(scanner, "Enter your account number: ");
         scanner.nextLine();
@@ -36,7 +36,7 @@ public class BankAccount {
 
     public static String computeInterest(int years, BankAccount bankAccount) {
         StringBuilder compoundInterest = new StringBuilder();
-        compoundInterest.append("Compound interest for ").append(years).append(" years at ").append(bankAccount.getInterestRate()).append("% per year\n\n");
+        compoundInterest.append("Compound interest for ").append(years).append(" years at ").append(bankAccount.getInterestRate() * 100).append("% interest per year\n\n");
         compoundInterest.append(String.format("%10s %10s %10s", "YEAR", "|", "BALANCE"));
         compoundInterest.append("\n---------------------------------------------------------------------------");
         for (int year = 1; year <= years; year++) {
@@ -73,7 +73,7 @@ public class BankAccount {
     }
 
     @Override
-    public String toString() {
+    public String toString() {//toString method
         return "BankAccount{" +
                 "accountNum=" + accountNum +
                 ", accountBalance=" + accountBalance +
@@ -81,11 +81,11 @@ public class BankAccount {
                 ", password=" + Arrays.toString(password).replace(",", "").replace("[", "")
                 .replace(" ", "")
                 .replace("]", "").trim() +
-                ", interestRate=" + interestRate +
-                '}';
+                ", interestRate=" + interestRate * 100 +
+                "%}";
     }
 
-    public String displayAccount() {
+    public String displayAccount() {//Method to display account details
         return toString();
     }
 
